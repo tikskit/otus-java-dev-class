@@ -8,3 +8,4 @@
  */
 
 rootProject.name = 'otus-java-dev-class'
+include 'hw01-gradle'
