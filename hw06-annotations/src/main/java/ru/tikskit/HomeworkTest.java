@@ -4,7 +4,15 @@ public class HomeworkTest {
     public HomeworkTest() {
     }
 
+    @Before
+    public void setUp0() {
+        System.out.println("set up 0");
+    }
 
+    @Before
+    public void setUp1() {
+        System.out.println("set up 1");
+    }
 
     @After
     public void tearDown() {

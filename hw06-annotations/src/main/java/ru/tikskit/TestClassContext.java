@@ -38,15 +38,20 @@ class TestClassContext {
 
     public List<TestResult> invoke() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         if (!isEmpty()) {
-            Object inst = constructor.newInstance();
-            List<TestResult> res;
 
-            invokeBefores(inst);
-            try {
-                res = invokeTests(inst);
-            } finally {
-                invokeAfters(inst);
+            List<TestResult> res = new ArrayList<>();
+
+            for (Method test : tests) {
+                Object inst = constructor.newInstance();
+
+                invokeBefores(inst);
+                try {
+                    res.add(invokeTest(inst, test));
+                } finally {
+                    invokeAfters(inst);
+                }
             }
+
 
             return res;
         } else {
@@ -67,23 +72,17 @@ class TestClassContext {
         }
     }
 
-    private List<TestResult> invokeTests(Object instance) throws IllegalAccessException {
-        List<TestResult> res = new ArrayList<>();
-        for (Method test : tests) {
-            try {
-                test.invoke(instance);
-                res.add(new TestResult(test, TestResult.Result.PASSED));
-            } catch (InvocationTargetException e) {
-                if (e.getCause() instanceof AssertionError) {
-                    res.add(new TestResult(test, TestResult.Result.FAILED, e.getCause()));
-                } else {
-                    res.add(new TestResult(test, TestResult.Result.EXCEPTION, e.getCause()));
-                }
+    private TestResult invokeTest(Object instance, Method test) throws IllegalAccessException {
+        try {
+            test.invoke(instance);
+            return new TestResult(test, TestResult.Result.PASSED);
+        } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof AssertionError) {
+                return new TestResult(test, TestResult.Result.FAILED, e.getCause());
+            } else {
+                return new TestResult(test, TestResult.Result.EXCEPTION, e.getCause());
             }
-
         }
-
-        return res;
     }
 
 
