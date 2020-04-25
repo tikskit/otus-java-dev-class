@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Tester {
 
-    public static final String RESULT_MSG = "Tests passed: %d, tests failed: %d";
+    public static final String RESULT_MSG = "Tests passed: %d, tests failed: %d, total: %d";
 
     private TestClassContext getTestClassContext(Class<?> clazz) throws NoSuchMethodException {
 
@@ -51,6 +51,7 @@ public class Tester {
                                 et.getException()));
                         break;
                     case PASSED:
+
                         passedCount++;
                         break;
                     case FAILED:
@@ -62,7 +63,7 @@ public class Tester {
             }
         }
 
-        out.println(String.format(RESULT_MSG, passedCount, failedCount));
+        out.println(String.format(RESULT_MSG, passedCount, failedCount, passedCount + failedCount));
     }
 
     public void doTest(String testClassName, PrintStream out) throws Exception {
