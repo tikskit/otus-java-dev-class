@@ -4,6 +4,13 @@ public class HomeworkTest {
     public HomeworkTest() {
     }
 
+
+
+    @After
+    public void tearDown() {
+        System.out.println("tear down");
+    }
+
     @Test
     public void test1() {
         throw new AssertionError("Условие не выполняется");

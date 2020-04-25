@@ -2,94 +2,63 @@ package ru.tikskit;
 
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Tester {
 
     public static final String RESULT_MSG = "Tests passed: %d, tests failed: %d";
 
-    private enum Result {
-        PASSED,
-        FAILED,
-        EXCEPTION
-    }
-
-    private static class ExecutedTest {
-        private final Method method;
-        private final Result result;
-        private final Throwable exception;
-
-        public ExecutedTest(Method method, Result result, Throwable exception) {
-            this.method = method;
-            this.exception = exception;
-            this.result = result;
-        }
-
-        public ExecutedTest(Method method, Result result) {
-            this.method = method;
-            this.result = result;
-            this.exception = null;
-        }
-
-    }
-
-    private Map<Method, Object> prepareTestMethods(Class<?> clazz) throws Exception {
-        Map<Method, Object> res = new HashMap<>();
+    private TestClassContext getTestClassContext(Class<?> clazz) throws NoSuchMethodException {
 
         Constructor<?> constructor = clazz.getConstructor();
+        TestClassContext tc = new TestClassContext(constructor);
+
         Method[] methods = clazz.getMethods();
         for (Method method: methods) {
             if (method.isAnnotationPresent(Test.class)) {
-                Object inst = constructor.newInstance();
-                res.put(method, inst);
+                tc.addTest(method);
+            } else if (method.isAnnotationPresent(Before.class)) {
+                tc.addBefore(method);
+            } else if (method.isAnnotationPresent(After.class)) {
+                tc.addAfter(method);
             }
         }
 
-        return res;
+        return tc.isEmpty() ? null : tc;
     }
 
-    private List<ExecutedTest> execTests(String testClassName) throws Exception {
+    private List<TestResult> execTests(String testClassName) throws Exception {
         Class<?> clazz = Class.forName(testClassName);
-        Map<Method, Object> tests = prepareTestMethods(clazz);
-        List<ExecutedTest> results = new ArrayList<>();
-        for (Method method: tests.keySet()) {
-            Object inst = tests.get(method);
-
-            try {
-                method.invoke(inst);
-                results.add(new ExecutedTest(method, Result.PASSED));
-            } catch (InvocationTargetException e) {
-                if (e.getCause() instanceof AssertionError) {
-                    results.add(new ExecutedTest(method, Result.FAILED, e.getCause()));
-                } else {
-                    results.add(new ExecutedTest(method, Result.EXCEPTION, e.getCause()));
-                }
-            }
+        TestClassContext tcc = getTestClassContext(clazz);
+        if (tcc != null) {
+            return tcc.invoke();
+        } else {
+            return null;
         }
-        return results;
     }
 
-    private void printResults(List<ExecutedTest> execResults, PrintStream out) {
+    private void printResults(List<TestResult> execResults, PrintStream out) {
         int passedCount = 0;
         int failedCount = 0;
-        for (ExecutedTest et: execResults) {
-            switch (et.result) {
-                case EXCEPTION:
-                    failedCount++;
-                    out.println(String.format("Method '%s' failed with exception: %s", et.method.getName(), et.exception));
-                    break;
-                case PASSED:
-                    passedCount++;
-                    break;
-                case FAILED:
-                    out.println(String.format("Method '%s' didn't passed with failed assertion: %s", et.method.getName(), et.exception.getMessage()));
-                    failedCount++;
-                    break;
+
+        if (execResults != null) {
+            for (TestResult et: execResults) {
+                switch (et.getResult()) {
+                    case EXCEPTION:
+                        failedCount++;
+                        out.println(String.format("Method '%s' failed with exception: %s", et.getTestMethod().getName(),
+                                et.getException()));
+                        break;
+                    case PASSED:
+                        passedCount++;
+                        break;
+                    case FAILED:
+                        out.println(String.format("Method '%s' didn't passed with failed assertion: %s",
+                                et.getTestMethod().getName(), et.getException().getMessage()));
+                        failedCount++;
+                        break;
+                }
             }
         }
 
@@ -97,7 +66,7 @@ public class Tester {
     }
 
     public void doTest(String testClassName, PrintStream out) throws Exception {
-        List<ExecutedTest> execResults = execTests(testClassName);
+        List<TestResult> execResults = execTests(testClassName);
         printResults(execResults, out);
 
     }
