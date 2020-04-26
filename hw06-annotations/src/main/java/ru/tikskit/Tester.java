@@ -10,6 +10,20 @@ public class Tester {
 
     public static final String RESULT_MSG = "Tests passed: %d, tests failed: %d, total: %d";
 
+
+    public void doTest(String testClassName, PrintStream out) throws Exception{
+        List<TestResult> execResults;
+        try {
+            execResults = execTests(testClassName);
+        } catch (TestInstantiateException e) {
+            out.println("Test class instantiate failed with exception:");
+            e.printStackTrace(out);
+            return;
+        }
+        printResults(execResults, out);
+
+    }
+
     private TestClassContext getTestClassContext(Class<?> clazz) throws TestInstantiateException {
 
         Constructor<?> constructor;
@@ -82,16 +96,4 @@ public class Tester {
         out.println(String.format(RESULT_MSG, passedCount, failedCount, passedCount + failedCount));
     }
 
-    public void doTest(String testClassName, PrintStream out) throws Exception{
-        List<TestResult> execResults;
-        try {
-            execResults = execTests(testClassName);
-        } catch (TestInstantiateException e) {
-            out.println("Test class instantiate failed with exception:");
-            e.printStackTrace(out);
-            return;
-        }
-        printResults(execResults, out);
-
-    }
 }
