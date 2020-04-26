@@ -34,6 +34,7 @@ class TestResult {
     public enum Result {
         PASSED,
         FAILED,
-        EXCEPTION
+        TEST_EXCEPTION,
+        SETUP_EXCEPTION
     }
 }
