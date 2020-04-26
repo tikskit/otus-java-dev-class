@@ -9,3 +9,5 @@
 
 rootProject.name = 'otus-java-dev-class'
 include 'hw01-gradle'
+include 'hw03-collections'
+include 'hw06-annotations'
