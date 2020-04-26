@@ -2,6 +2,7 @@ package ru.tikskit;
 
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -9,9 +10,14 @@ public class Tester {
 
     public static final String RESULT_MSG = "Tests passed: %d, tests failed: %d, total: %d";
 
-    private TestClassContext getTestClassContext(Class<?> clazz) throws NoSuchMethodException {
+    private TestClassContext getTestClassContext(Class<?> clazz) throws TestInstantiateException {
 
-        Constructor<?> constructor = clazz.getConstructor();
+        Constructor<?> constructor;
+        try {
+            constructor = clazz.getConstructor();
+        } catch (NoSuchMethodException | SecurityException e) {
+            throw new TestInstantiateException(e);
+        }
         TestClassContext tc = new TestClassContext(constructor);
 
         Method[] methods = clazz.getMethods();
@@ -28,8 +34,14 @@ public class Tester {
         return tc.isEmpty() ? null : tc;
     }
 
-    private List<TestResult> execTests(String testClassName) throws Exception {
-        Class<?> clazz = Class.forName(testClassName);
+    private List<TestResult> execTests(String testClassName) throws TestInstantiateException, InvocationTargetException,
+            IllegalAccessException {
+        Class<?> clazz;
+        try {
+            clazz = Class.forName(testClassName);
+        } catch (ClassNotFoundException e) {
+            throw new TestInstantiateException(e);
+        }
         TestClassContext tcc = getTestClassContext(clazz);
         if (tcc != null) {
             return tcc.invoke();
@@ -45,7 +57,7 @@ public class Tester {
         if (execResults != null) {
             for (TestResult et: execResults) {
                 switch (et.getResult()) {
-                    case EXCEPTION:
+                    case TEST_EXCEPTION:
                         failedCount++;
                         out.println(String.format("Method '%s' failed with exception: %s", et.getTestMethod().getName(),
                                 et.getException()));
@@ -59,6 +71,10 @@ public class Tester {
                                 et.getTestMethod().getName(), et.getException().getMessage()));
                         failedCount++;
                         break;
+                    case SETUP_EXCEPTION:
+                        out.println("Test setup exception:");
+                        et.getException().printStackTrace(out);
+                        break;
                 }
             }
         }
@@ -66,8 +82,15 @@ public class Tester {
         out.println(String.format(RESULT_MSG, passedCount, failedCount, passedCount + failedCount));
     }
 
-    public void doTest(String testClassName, PrintStream out) throws Exception {
-        List<TestResult> execResults = execTests(testClassName);
+    public void doTest(String testClassName, PrintStream out) throws Exception{
+        List<TestResult> execResults;
+        try {
+            execResults = execTests(testClassName);
+        } catch (TestInstantiateException e) {
+            out.println("Test class instantiate failed with exception:");
+            e.printStackTrace(out);
+            return;
+        }
         printResults(execResults, out);
 
     }

@@ -36,22 +36,31 @@ class TestClassContext {
         return tests.isEmpty();
     }
 
-    public List<TestResult> invoke() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public List<TestResult> invoke() throws  IllegalAccessException, InvocationTargetException, TestInstantiateException {
         if (!isEmpty()) {
 
             List<TestResult> res = new ArrayList<>();
 
             for (Method test : tests) {
-                Object inst = constructor.newInstance();
+                Object inst;
+                try {
+                    inst = constructor.newInstance();
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    throw new TestInstantiateException(e);
+                }
 
-                invokeBefores(inst);
+                try {
+                    invokeBefores(inst);
+                } catch (InvocationTargetException | IllegalAccessException e) {
+                    res.add(new TestResult(test, TestResult.Result.SETUP_EXCEPTION, e));
+                    return res;
+                }
                 try {
                     res.add(invokeTest(inst, test));
                 } finally {
                     invokeAfters(inst);
                 }
             }
-
 
             return res;
         } else {
@@ -80,7 +89,7 @@ class TestClassContext {
             if (e.getCause() instanceof AssertionError) {
                 return new TestResult(test, TestResult.Result.FAILED, e.getCause());
             } else {
-                return new TestResult(test, TestResult.Result.EXCEPTION, e.getCause());
+                return new TestResult(test, TestResult.Result.TEST_EXCEPTION, e.getCause());
             }
         }
     }

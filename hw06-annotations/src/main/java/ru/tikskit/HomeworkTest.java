@@ -1,12 +1,11 @@
 package ru.tikskit;
 
 public class HomeworkTest {
-    public HomeworkTest() {
-    }
 
     @Before
     public void setUp0() {
         System.out.println("set up 0");
+        throw new UnsupportedOperationException("Set up 0 exception");
     }
 
     @Before
