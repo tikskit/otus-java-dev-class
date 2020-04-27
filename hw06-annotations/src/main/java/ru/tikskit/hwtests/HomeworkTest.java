@@ -1,11 +1,14 @@
-package ru.tikskit;
+package ru.tikskit.hwtests;
+
+import ru.tikskit.testframework.annotations.After;
+import ru.tikskit.testframework.annotations.Before;
+import ru.tikskit.testframework.annotations.Test;
 
 public class HomeworkTest {
 
     @Before
     public void setUp0() {
         System.out.println("set up 0");
-        throw new UnsupportedOperationException("Set up 0 exception");
     }
 
     @Before

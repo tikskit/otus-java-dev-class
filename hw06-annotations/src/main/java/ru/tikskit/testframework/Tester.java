@@ -1,4 +1,8 @@
-package ru.tikskit;
+package ru.tikskit.testframework;
+
+import ru.tikskit.testframework.annotations.After;
+import ru.tikskit.testframework.annotations.Before;
+import ru.tikskit.testframework.annotations.Test;
 
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;

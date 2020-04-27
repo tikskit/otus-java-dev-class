@@ -1,4 +1,4 @@
-package ru.tikskit;
+package ru.tikskit.testframework;
 
 import java.lang.reflect.Method;
 
