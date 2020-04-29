@@ -6,6 +6,7 @@ class TestResult {
     private final Method testMethod;
     private final Result result;
     private final Throwable exception;
+    private Throwable tearDownException;
 
     public TestResult(Method testMethod, Result result, Throwable exception) {
         this.testMethod = testMethod;
@@ -29,6 +30,14 @@ class TestResult {
 
     public Throwable getException() {
         return exception;
+    }
+
+    public Throwable getTearDownException() {
+        return tearDownException;
+    }
+
+    public void setTearDownException(Throwable tearDownException) {
+        this.tearDownException = tearDownException;
     }
 
     public enum Result {

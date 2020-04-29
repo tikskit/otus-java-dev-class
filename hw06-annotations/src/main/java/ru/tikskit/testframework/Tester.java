@@ -52,8 +52,7 @@ public class Tester {
         return tc.isEmpty() ? null : tc;
     }
 
-    private List<TestResult> execTests(String testClassName) throws TestInstantiateException, InvocationTargetException,
-            IllegalAccessException {
+    private List<TestResult> execTests(String testClassName) throws TestInstantiateException {
         Class<?> clazz;
         try {
             clazz = Class.forName(testClassName);
@@ -90,10 +89,20 @@ public class Tester {
                         failedCount++;
                         break;
                     case SETUP_EXCEPTION:
-                        out.println(String.format("Test setup for method %s failed with message: %s",
-                                et.getTestMethod().getName(), et.getException().getMessage()));
+                        out.println(String.format("Test setup for method '%s' failed with exception: %s '%s'",
+                                et.getTestMethod().getName(), et.getException().getClass(),
+                                et.getException().getMessage()));
                         failedCount++;
                         break;
+                }
+
+                if (et.getTearDownException() != null) {
+                    out.println(
+                            String.format(
+                                    "Warning: exception was thrown while processing one of After methods for test '%s': %s '%s'",
+                                    et.getTestMethod().getName(), et.getTearDownException().getClass(),
+                                    et.getTearDownException().getMessage()));
+
                 }
             }
         }

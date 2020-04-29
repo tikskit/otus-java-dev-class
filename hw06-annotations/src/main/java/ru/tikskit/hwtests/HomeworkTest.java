@@ -28,6 +28,7 @@ public class HomeworkTest {
     @After
     public void tearDown() {
         System.out.println("tear down");
+        throw new UnsupportedOperationException("thrown exception");
     }
 
     @Test

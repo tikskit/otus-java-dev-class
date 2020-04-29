@@ -51,14 +51,18 @@ class TestClassContext {
 
                 try {
                     invokeBefores(inst);
-                    try {
-                        res.add(invokeTest(inst, test));
-                    } finally {
-                        invokeAfters(inst);
-                    }
                 } catch (InvocationTargetException | IllegalAccessException e) {
-                    res.add(new TestResult(test, TestResult.Result.SETUP_EXCEPTION, e));
+                    res.add(new TestResult(test, TestResult.Result.SETUP_EXCEPTION, e.getCause()));
+                    continue;
                 }
+                TestResult tr = invokeTest(inst, test);
+                res.add(tr);
+                try {
+                    invokeAfters(inst);
+                } catch (InvocationTargetException | IllegalAccessException e) {
+                    tr.setTearDownException(e.getCause());
+                }
+
             }
 
             return res;
@@ -80,7 +84,7 @@ class TestClassContext {
         }
     }
 
-    private TestResult invokeTest(Object instance, Method test) throws IllegalAccessException {
+    private TestResult invokeTest(Object instance, Method test) {
         try {
             test.invoke(instance);
             return new TestResult(test, TestResult.Result.PASSED);
@@ -90,6 +94,8 @@ class TestClassContext {
             } else {
                 return new TestResult(test, TestResult.Result.TEST_EXCEPTION, e.getCause());
             }
+        } catch (IllegalAccessException e) {
+            return new TestResult(test, TestResult.Result.TEST_EXCEPTION, e.getCause());
         }
     }
 
