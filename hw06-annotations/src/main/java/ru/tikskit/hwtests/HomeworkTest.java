@@ -5,15 +5,24 @@ import ru.tikskit.testframework.annotations.Before;
 import ru.tikskit.testframework.annotations.Test;
 
 public class HomeworkTest {
+    private static int setUpCounter = 0;
 
     @Before
-    public void setUp0() {
+    public void setUp0() throws Exception {
+        every3dThrowsException();
         System.out.println("set up 0");
     }
 
     @Before
-    public void setUp1() {
+    public void setUp1() throws Exception {
+        every3dThrowsException();
         System.out.println("set up 1");
+    }
+
+    private void every3dThrowsException() {
+        if (setUpCounter++ % 4 == 1) {
+            throw new UnsupportedOperationException("thrown exception");
+        }
     }
 
     @After
@@ -23,7 +32,7 @@ public class HomeworkTest {
 
     @Test
     public void test1() {
-        throw new AssertionError("Условие не выполняется");
+        /*throw new AssertionError("Условие не выполняется");*/
     }
 
     @Test

@@ -90,8 +90,9 @@ public class Tester {
                         failedCount++;
                         break;
                     case SETUP_EXCEPTION:
-                        out.println("Test setup exception:");
-                        et.getException().printStackTrace(out);
+                        out.println(String.format("Test setup for method %s failed with message: %s",
+                                et.getTestMethod().getName(), et.getException().getMessage()));
+                        failedCount++;
                         break;
                 }
             }

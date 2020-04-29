@@ -36,7 +36,7 @@ class TestClassContext {
         return tests.isEmpty();
     }
 
-    public List<TestResult> invoke() throws  IllegalAccessException, InvocationTargetException, TestInstantiateException {
+    public List<TestResult> invoke() throws  TestInstantiateException {
         if (!isEmpty()) {
 
             List<TestResult> res = new ArrayList<>();
@@ -51,14 +51,13 @@ class TestClassContext {
 
                 try {
                     invokeBefores(inst);
+                    try {
+                        res.add(invokeTest(inst, test));
+                    } finally {
+                        invokeAfters(inst);
+                    }
                 } catch (InvocationTargetException | IllegalAccessException e) {
                     res.add(new TestResult(test, TestResult.Result.SETUP_EXCEPTION, e));
-                    return res;
-                }
-                try {
-                    res.add(invokeTest(inst, test));
-                } finally {
-                    invokeAfters(inst);
                 }
             }
 
