@@ -36,3 +36,5 @@ build
 *.iws
 *.ipr
 *.idea
+
+dump
