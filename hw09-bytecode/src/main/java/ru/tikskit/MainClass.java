@@ -8,6 +8,7 @@ public class MainClass {
     public static void main(String args[]) {
         Car toyota = ClassFactory.createToyota();
         toyota.meth1(10, 'a');
+        toyota.meth1(20, 'b');
         toyota.meth1(10, false);
         toyota.meth2();
 

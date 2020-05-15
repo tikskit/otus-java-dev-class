@@ -7,6 +7,8 @@ import ru.tikskit.instrumentation.annotations.Log;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClassFactory {
 
@@ -22,6 +24,7 @@ public class ClassFactory {
 
     static class CarInvocationHandler implements InvocationHandler {
         private final Car car;
+        private final Map<Method, Boolean> knownMethods = new HashMap<>();
 
         public CarInvocationHandler(Car car) {
             this.car = car;
@@ -29,13 +32,20 @@ public class ClassFactory {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            try {
-                Method m = car.getClass().getMethod(method.getName(), method.getParameterTypes());
-                if (m.isAnnotationPresent(Log.class)) {
-                    System.out.println(String.format("Method %s is about to get called", methodToStr(method, args)));
+
+            Boolean isAnnotationPresent = knownMethods.get(method);
+            if (isAnnotationPresent == null) {
+                try {
+                    Method m = car.getClass().getMethod(method.getName(), method.getParameterTypes());
+                    isAnnotationPresent = m.isAnnotationPresent(Log.class);
+                    knownMethods.put(method, isAnnotationPresent);
+                } catch (NoSuchMethodException e) {
+                    System.out.println(String.format("Method %s not found!", methodToStr(method, args)));
                 }
-            } catch (NoSuchMethodException e) {
-                System.out.println(String.format("Method %s not found!", methodToStr(method, args)));
+            }
+
+            if (isAnnotationPresent != null && isAnnotationPresent) {
+                System.out.println(String.format("Method %s is about to get called", methodToStr(method, args)));
             }
 
 
