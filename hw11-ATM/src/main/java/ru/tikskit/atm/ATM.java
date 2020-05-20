@@ -1,13 +1,13 @@
 package ru.tikskit.atm;
 
 public class ATM {
-    private final MoneyPack content = new MoneyPack();
+    private final MoneyStorage moneyStorage = new MoneyStorage();
 
-    public void put(MoneyPack moneyPack) {
-        content.add(moneyPack);
+    public void put(Denomination denomination, int count) {
+        moneyStorage.add(denomination, count);
     }
 
-    public MoneyPack get(int amount) throws NotEnoughMoneyException, CantWithdrawException, OutOfBanknotesException {
+    public MoneyCollection get(int amount) throws NotEnoughMoneyException, CantWithdrawException, OutOfBanknotesException {
 
         if (amount <= 0) {
             throw new IllegalArgumentException(String.format("Недопустимое значение суммы: %d", amount));
@@ -16,32 +16,30 @@ public class ATM {
             throw new NotEnoughMoneyException(amount);
         }
 
-
-
         return withdrawBanknotes(Denomination.MAX_DENOMINATION, amount);
     }
 
     public int calcTotalAmount() {
         int res = 0;
-        for (Denomination d : content.getDenominations()) {
-            res += d.getValue() * content.getBanknotesCount(d);
+        for (Denomination d : moneyStorage.getDenominations()) {
+            res += d.getValue() * moneyStorage.getBanknotesCount(d);
         }
 
         return res;
     }
 
-    private MoneyPack withdrawBanknotes(Denomination curDenomination, int moneyAmount) throws OutOfBanknotesException,
+    private MoneyCollection withdrawBanknotes(Denomination curDenomination, int moneyAmount) throws OutOfBanknotesException,
             CantWithdrawException {
 
-        MoneyPack res = new MoneyPack();
+        MoneyCollection res = new MoneyCollection();
 
         int banknotesNeeded = moneyAmount / curDenomination.getValue();
-        int banknotesAvailable = content.getBanknotesCount(curDenomination);
+        int banknotesAvailable = moneyStorage.getBanknotesCount(curDenomination);
         int banknotesUsed = Math.min(banknotesNeeded, banknotesAvailable);
 
 
         if (banknotesUsed > 0) {
-            content.withdraw(curDenomination, banknotesUsed);
+            moneyStorage.withdraw(curDenomination, banknotesUsed);
             int moneyWithdrawn = banknotesUsed * curDenomination.getValue();
             int remains = moneyAmount - moneyWithdrawn;
             res.add(curDenomination, banknotesUsed);
@@ -56,7 +54,7 @@ public class ATM {
         return res;
     }
 
-    private void withdrawNext(MoneyPack moneyPack, Denomination curDenomination, int moneyAmount) throws
+    private void withdrawNext(MoneyCollection moneyPack, Denomination curDenomination, int moneyAmount) throws
             OutOfBanknotesException, CantWithdrawException {
 
         Denomination nextDenomination = reduceDenomination(curDenomination);
@@ -71,8 +69,6 @@ public class ATM {
 
     private Denomination reduceDenomination(Denomination cur) {
         switch(cur) {
-            case FIFTY:
-                return null;
             case HUNDRED:
                 return Denomination.FIFTY;
             case FIVE_HUNDRED:
