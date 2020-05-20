@@ -7,17 +7,16 @@ public class ATM {
         moneyStorage.add(denomination, count);
     }
 
-    public MoneyCollection get(int amount) throws NotEnoughMoneyException, CantWithdrawException,
-            OutOfBanknotesException {
+    public MoneyCollection get(int moneyAmount) throws NotEnoughMoneyException, CantWithdrawException {
 
-        if (amount <= 0) {
-            throw new IllegalArgumentException(String.format("Недопустимое значение суммы: %d", amount));
+        if (moneyAmount <= 0) {
+            throw new IllegalArgumentException(String.format("Недопустимое значение суммы: %d", moneyAmount));
         }
-        if (amount > calcTotalAmount()) {
-            throw new NotEnoughMoneyException(amount);
+        if (moneyAmount > calcTotalAmount()) {
+            throw new NotEnoughMoneyException(moneyAmount);
         }
 
-        return withdrawBanknotes(Denomination.MAX_DENOMINATION, amount);
+        return withdrawBanknotes(Denomination.MAX_DENOMINATION, moneyAmount);
     }
 
     public int calcTotalAmount() {
@@ -30,7 +29,7 @@ public class ATM {
     }
 
     private MoneyCollection withdrawBanknotes(Denomination curDenomination, int moneyAmount) throws
-            OutOfBanknotesException, CantWithdrawException {
+            CantWithdrawException {
 
         MoneyCollection res = new MoneyCollection();
 
@@ -38,14 +37,19 @@ public class ATM {
         int banknotesAvailable = moneyStorage.getBanknotesCount(curDenomination);
         int banknotesUsed = Math.min(banknotesNeeded, banknotesAvailable);
 
-
         if (banknotesUsed > 0) {
-            moneyStorage.withdraw(curDenomination, banknotesUsed);
+            try {
+                moneyStorage.withdraw(curDenomination, banknotesUsed);
+            } catch (OutOfBanknotesException e) {
+                /* Ошибки не должно быть, потому что выше мы проверяем количество доступных банкнот. Но этот метод
+                выкидывает OutOfBanknotesException, поэтому просто перевыкидываем RuntimeException */
+                throw new RuntimeException("Произошла ошибка при попытке уменьшить количество банкнот в хранилище!", e);
+            }
             int moneyWithdrawn = banknotesUsed * curDenomination.getValue();
-            int remains = moneyAmount - moneyWithdrawn;
+            int remaindersToWithdraw = moneyAmount - moneyWithdrawn;
             res.add(curDenomination, banknotesUsed);
-            if (remains > 0) {
-                withdrawNext(res, curDenomination, remains);
+            if (remaindersToWithdraw > 0) {
+                withdrawNext(res, curDenomination, remaindersToWithdraw);
             }
 
         } else {
@@ -56,7 +60,7 @@ public class ATM {
     }
 
     private void withdrawNext(MoneyCollection moneyPack, Denomination curDenomination, int moneyAmount) throws
-            OutOfBanknotesException, CantWithdrawException {
+            CantWithdrawException {
 
         Denomination nextDenomination = getSmallerDenomination(curDenomination);
         if (nextDenomination == null) {

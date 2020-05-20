@@ -5,7 +5,6 @@ import ru.tikskit.atm.CantWithdrawException;
 import ru.tikskit.atm.Denomination;
 import ru.tikskit.atm.MoneyCollection;
 import ru.tikskit.atm.NotEnoughMoneyException;
-import ru.tikskit.atm.OutOfBanknotesException;
 
 public class ATMMainClass {
     public static void main(String[] args) {
@@ -23,7 +22,7 @@ public class ATMMainClass {
             MoneyCollection mp = atm.get(10650);
             System.out.println(mp.toString());
             System.out.println(String.format("В банкомате: %d", atm.calcTotalAmount()));
-        } catch (NotEnoughMoneyException | CantWithdrawException | OutOfBanknotesException e) {
+        } catch (NotEnoughMoneyException | CantWithdrawException e) {
             e.printStackTrace();
         }
     }
