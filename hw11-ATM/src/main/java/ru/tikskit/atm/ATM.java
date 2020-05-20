@@ -7,7 +7,8 @@ public class ATM {
         moneyStorage.add(denomination, count);
     }
 
-    public MoneyCollection get(int amount) throws NotEnoughMoneyException, CantWithdrawException, OutOfBanknotesException {
+    public MoneyCollection get(int amount) throws NotEnoughMoneyException, CantWithdrawException,
+            OutOfBanknotesException {
 
         if (amount <= 0) {
             throw new IllegalArgumentException(String.format("Недопустимое значение суммы: %d", amount));
@@ -28,8 +29,8 @@ public class ATM {
         return res;
     }
 
-    private MoneyCollection withdrawBanknotes(Denomination curDenomination, int moneyAmount) throws OutOfBanknotesException,
-            CantWithdrawException {
+    private MoneyCollection withdrawBanknotes(Denomination curDenomination, int moneyAmount) throws
+            OutOfBanknotesException, CantWithdrawException {
 
         MoneyCollection res = new MoneyCollection();
 
@@ -57,7 +58,7 @@ public class ATM {
     private void withdrawNext(MoneyCollection moneyPack, Denomination curDenomination, int moneyAmount) throws
             OutOfBanknotesException, CantWithdrawException {
 
-        Denomination nextDenomination = reduceDenomination(curDenomination);
+        Denomination nextDenomination = getSmallerDenomination(curDenomination);
         if (nextDenomination == null) {
             throw new CantWithdrawException(moneyAmount);
         }
@@ -67,7 +68,7 @@ public class ATM {
 
 
 
-    private Denomination reduceDenomination(Denomination cur) {
+    private Denomination getSmallerDenomination(Denomination cur) {
         switch(cur) {
             case HUNDRED:
                 return Denomination.FIFTY;

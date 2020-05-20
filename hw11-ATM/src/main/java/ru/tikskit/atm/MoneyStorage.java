@@ -1,6 +1,7 @@
 package ru.tikskit.atm;
 
 class MoneyStorage extends MoneyCollection {
+
     public void withdraw(Denomination denomination, int count) throws OutOfBanknotesException {
         Integer curBanknotesCount = content.get(denomination);
 
