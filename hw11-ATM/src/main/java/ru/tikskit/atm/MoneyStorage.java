@@ -1,8 +1,10 @@
 package ru.tikskit.atm;
 
+import java.util.Set;
+
 class MoneyStorage extends MoneyCollection {
 
-    public void withdraw(LinkedNominal nominal, int count) throws OutOfBanknotesException {
+    public void withdraw(Nominal nominal, int count) throws OutOfBanknotesException {
         Integer curBanknotesCount = content.get(nominal);
 
         if (curBanknotesCount == null) {
@@ -19,4 +21,11 @@ class MoneyStorage extends MoneyCollection {
         }
     }
 
+    public Set<Nominal> getNominals() {
+        return content.keySet();
+    }
+
+    public Integer getBanknotesCount(Nominal nominal) {
+        return content.get(nominal) == null ? 0 : content.get(nominal);
+    }
 }

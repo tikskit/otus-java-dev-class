@@ -5,6 +5,10 @@ public class NominalImpl implements Nominal{
     private final int value;
 
     public NominalImpl(int value) {
+        if (value <= 0) {
+            throw new IllegalArgumentException(String.format("Недопустимое значение номинала банкноты: %d!", value));
+        }
+
         this.value = value;
     }
 
@@ -28,7 +32,7 @@ public class NominalImpl implements Nominal{
             return false;
         }
 
-        if (!(obj instanceof NominalImpl)) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
 

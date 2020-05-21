@@ -27,12 +27,4 @@ class MoneyCollection {
             }
         }
     }
-
-    public Set<Nominal> getNominals() {
-        return content.keySet();
-    }
-
-    public Integer getBanknotesCount(Nominal nominal) {
-        return content.get(nominal) == null ? 0 : content.get(nominal);
-    }
 }

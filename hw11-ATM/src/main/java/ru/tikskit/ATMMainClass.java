@@ -12,16 +12,16 @@ public class ATMMainClass {
         ATM atm = new ATM();
 
         atm.put(new MoneyPack()
-                .addBanknotes(new NominalImpl(50), 47)
-                /*.addBanknotes(new NominalImpl(100), 30)
+                .addBanknotes(new NominalImpl(50), 1)
+                .addBanknotes(new NominalImpl(100), 30)
                 .addBanknotes(new NominalImpl(500), 10)
-                .addBanknotes(new NominalImpl(1000), 1)*/
+                .addBanknotes(new NominalImpl(1000), 1)
         );
 
         try {
             System.out.println(String.format("В банкомате: %d", atm.calcTotalAmount()));
 
-            MoneyPack mp = atm.get(100);
+            MoneyPack mp = atm.get(750);
             System.out.println(mp.toString());
             System.out.println(String.format("В банкомате: %d", atm.calcTotalAmount()));
         } catch (NotEnoughMoneyException | CantWithdrawException e) {

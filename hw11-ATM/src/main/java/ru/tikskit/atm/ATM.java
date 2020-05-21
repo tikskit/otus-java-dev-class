@@ -6,18 +6,24 @@ import java.util.Map;
 
 public class ATM {
     private final MoneyStorage moneyStorage;
-    private final LinkedNominal nominalRoot;
+    private final static Integer[] AVAILABLE_NOMINALS;
+
+    static {
+        AVAILABLE_NOMINALS = new Integer[]{50, 100, 500, 1000};
+        /* Чтобы избежать ошибки, если в предыдущей строке номиналы забиты не в порядке возрастания. Кроме того, по
+        этому массиву применяется Arrays.binarySearch, который требует восходящего упорядочивания */
+        Arrays.sort(AVAILABLE_NOMINALS, Comparator.comparingInt(o -> o));
+    }
 
     public ATM() {
-        nominalRoot = buildNominalChain(new Integer[]{50, 100, 500, 1000});
         moneyStorage = new MoneyStorage();
     }
 
     public void put(MoneyPack moneyPack) {
         for (Map.Entry<Nominal, Integer> es : moneyPack.content.entrySet()) {
-            if (!existsNominal(es.getKey())) {
+            if (!nominalSupported(es.getKey())) {
                 throw new IllegalArgumentException(
-                        String.format("Банкноты с номиналом %d не поддерживаются банкоматом!"));
+                        String.format("Банкноты с номиналом %d не поддерживаются банкоматом!", es.getKey().getValue()));
             }
         }
         moneyStorage.add(moneyPack);
@@ -32,7 +38,7 @@ public class ATM {
             throw new NotEnoughMoneyException(moneyAmount);
         }
 
-        return withdrawBanknotes(nominalRoot, moneyAmount);
+        return withdrawBanknotes(getBiggestNominal(), moneyAmount);
     }
 
     public int calcTotalAmount() {
@@ -44,7 +50,12 @@ public class ATM {
         return res;
     }
 
-    private MoneyPack withdrawBanknotes(LinkedNominal nominal, int moneyAmount) throws
+    private static Nominal getBiggestNominal(){
+        return new NominalImpl(AVAILABLE_NOMINALS[AVAILABLE_NOMINALS.length - 1]);
+    }
+
+
+    private MoneyPack withdrawBanknotes(Nominal nominal, int moneyAmount) throws
             CantWithdrawException {
 
         MoneyPack res = new MoneyPack();
@@ -75,10 +86,10 @@ public class ATM {
         return res;
     }
 
-    private void withdrawNext(MoneyCollection moneyPack, LinkedNominal nominal, int moneyAmount) throws
+    private void withdrawNext(MoneyCollection moneyPack, Nominal nominal, int moneyAmount) throws
             CantWithdrawException {
 
-        LinkedNominal smallerNominal = nominal.getSmaller();
+        Nominal smallerNominal = getSmallerNominal(nominal);
         if (smallerNominal == null) {
             throw new CantWithdrawException(moneyAmount);
         }
@@ -86,35 +97,23 @@ public class ATM {
         moneyPack.add(withdrawBanknotes(smallerNominal, moneyAmount));
     }
 
-    private static LinkedNominal buildNominalChain(Integer[] nominalValues) {
-        if (nominalValues == null || nominalValues.length == 0) {
-            throw new IllegalArgumentException("Пустой массив номиналов банкнот!");
+    private Nominal getSmallerNominal(Nominal nominal) {
+        int index = Arrays.binarySearch(AVAILABLE_NOMINALS, nominal.getValue());
+        if (index == 0) {
+            return null;
+        } else if (index > 0) {
+            return new NominalImpl(AVAILABLE_NOMINALS[index - 1]);
+        } else {
+            throw new IllegalArgumentException(String.format("Банкноты с номиналом %d не поддерживаются банкоматом!",
+                    nominal.getValue()));
         }
-
-        // Упорядочиваем по возрастанию
-        Arrays.sort(nominalValues, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
-        });
-
-        LinkedNominal ln = new LinkedNominalImpl(nominalValues[0], null);
-        for (int i = 1; i < nominalValues.length; i++) {
-            ln = new LinkedNominalImpl(nominalValues[i], ln);
-        }
-
-        return ln;
     }
 
-    private boolean existsNominal(Nominal nominal) {
-        LinkedNominal ln = nominalRoot;
-        while (ln != null) {
-            if (ln.getValue() == nominal.getValue()) {
+    private boolean nominalSupported(Nominal nominal) {
+        for (Integer i : AVAILABLE_NOMINALS) {
+            if (i == nominal.getValue()) {
                 return true;
             }
-
-            ln = ln.getSmaller();
         }
 
         return false;
