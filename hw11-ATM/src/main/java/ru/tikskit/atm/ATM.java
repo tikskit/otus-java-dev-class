@@ -1,13 +1,29 @@
 package ru.tikskit.atm;
 
-public class ATM {
-    private final MoneyStorage moneyStorage = new MoneyStorage();
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Map;
 
-    public void put(Denomination denomination, int count) {
-        moneyStorage.add(denomination, count);
+public class ATM {
+    private final MoneyStorage moneyStorage;
+    private final LinkedNominal nominalRoot;
+
+    public ATM() {
+        nominalRoot = buildNominalChain(new Integer[]{50, 100, 500, 1000});
+        moneyStorage = new MoneyStorage();
     }
 
-    public MoneyCollection get(int moneyAmount) throws NotEnoughMoneyException, CantWithdrawException {
+    public void put(MoneyPack moneyPack) {
+        for (Map.Entry<Nominal, Integer> es : moneyPack.content.entrySet()) {
+            if (!existsNominal(es.getKey())) {
+                throw new IllegalArgumentException(
+                        String.format("Банкноты с номиналом %d не поддерживаются банкоматом!"));
+            }
+        }
+        moneyStorage.add(moneyPack);
+    }
+
+    public MoneyPack get(int moneyAmount) throws NotEnoughMoneyException, CantWithdrawException {
 
         if (moneyAmount <= 0) {
             throw new IllegalArgumentException(String.format("Недопустимое значение суммы: %d", moneyAmount));
@@ -16,72 +32,92 @@ public class ATM {
             throw new NotEnoughMoneyException(moneyAmount);
         }
 
-        return withdrawBanknotes(Denomination.MAX_DENOMINATION, moneyAmount);
+        return withdrawBanknotes(nominalRoot, moneyAmount);
     }
 
     public int calcTotalAmount() {
         int res = 0;
-        for (Denomination d : moneyStorage.getDenominations()) {
-            res += d.getValue() * moneyStorage.getBanknotesCount(d);
+        for (Nominal n : moneyStorage.getNominals()) {
+            res += n.getValue() * moneyStorage.getBanknotesCount(n);
         }
 
         return res;
     }
 
-    private MoneyCollection withdrawBanknotes(Denomination curDenomination, int moneyAmount) throws
+    private MoneyPack withdrawBanknotes(LinkedNominal nominal, int moneyAmount) throws
             CantWithdrawException {
 
-        MoneyCollection res = new MoneyCollection();
+        MoneyPack res = new MoneyPack();
 
-        int banknotesNeeded = moneyAmount / curDenomination.getValue();
-        int banknotesAvailable = moneyStorage.getBanknotesCount(curDenomination);
+        int banknotesNeeded = moneyAmount / nominal.getValue();
+        int banknotesAvailable = moneyStorage.getBanknotesCount(nominal);
         int banknotesUsed = Math.min(banknotesNeeded, banknotesAvailable);
 
         if (banknotesUsed > 0) {
             try {
-                moneyStorage.withdraw(curDenomination, banknotesUsed);
+                moneyStorage.withdraw(nominal, banknotesUsed);
             } catch (OutOfBanknotesException e) {
                 /* Ошибки не должно быть, потому что выше мы проверяем количество доступных банкнот. Но этот метод
                 выкидывает OutOfBanknotesException, поэтому просто перевыкидываем RuntimeException */
                 throw new RuntimeException("Произошла ошибка при попытке уменьшить количество банкнот в хранилище!", e);
             }
-            int moneyWithdrawn = banknotesUsed * curDenomination.getValue();
+            int moneyWithdrawn = banknotesUsed * nominal.getValue();
             int remaindersToWithdraw = moneyAmount - moneyWithdrawn;
-            res.add(curDenomination, banknotesUsed);
+            res.add(nominal, banknotesUsed);
             if (remaindersToWithdraw > 0) {
-                withdrawNext(res, curDenomination, remaindersToWithdraw);
+                withdrawNext(res, nominal, remaindersToWithdraw);
             }
 
         } else {
-            withdrawNext(res, curDenomination, moneyAmount);
+            withdrawNext(res, nominal, moneyAmount);
         }
 
         return res;
     }
 
-    private void withdrawNext(MoneyCollection moneyPack, Denomination curDenomination, int moneyAmount) throws
+    private void withdrawNext(MoneyCollection moneyPack, LinkedNominal nominal, int moneyAmount) throws
             CantWithdrawException {
 
-        Denomination nextDenomination = getSmallerDenomination(curDenomination);
-        if (nextDenomination == null) {
+        LinkedNominal smallerNominal = nominal.getSmaller();
+        if (smallerNominal == null) {
             throw new CantWithdrawException(moneyAmount);
         }
 
-        moneyPack.add(withdrawBanknotes(nextDenomination, moneyAmount));
+        moneyPack.add(withdrawBanknotes(smallerNominal, moneyAmount));
     }
 
-
-
-    private Denomination getSmallerDenomination(Denomination cur) {
-        switch(cur) {
-            case HUNDRED:
-                return Denomination.FIFTY;
-            case FIVE_HUNDRED:
-                return Denomination.HUNDRED;
-            case THOUSAND:
-                return Denomination.FIVE_HUNDRED;
-            default:
-                return null;
+    private static LinkedNominal buildNominalChain(Integer[] nominalValues) {
+        if (nominalValues == null || nominalValues.length == 0) {
+            throw new IllegalArgumentException("Пустой массив номиналов банкнот!");
         }
+
+        // Упорядочиваем по возрастанию
+        Arrays.sort(nominalValues, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 - o2;
+            }
+        });
+
+        LinkedNominal ln = new LinkedNominalImpl(nominalValues[0], null);
+        for (int i = 1; i < nominalValues.length; i++) {
+            ln = new LinkedNominalImpl(nominalValues[i], ln);
+        }
+
+        return ln;
     }
+
+    private boolean existsNominal(Nominal nominal) {
+        LinkedNominal ln = nominalRoot;
+        while (ln != null) {
+            if (ln.getValue() == nominal.getValue()) {
+                return true;
+            }
+
+            ln = ln.getSmaller();
+        }
+
+        return false;
+    }
+
 }

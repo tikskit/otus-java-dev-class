@@ -2,16 +2,16 @@ package ru.tikskit.atm;
 
 class MoneyStorage extends MoneyCollection {
 
-    public void withdraw(Denomination denomination, int count) throws OutOfBanknotesException {
-        Integer curBanknotesCount = content.get(denomination);
+    public void withdraw(LinkedNominal nominal, int count) throws OutOfBanknotesException {
+        Integer curBanknotesCount = content.get(nominal);
 
         if (curBanknotesCount == null) {
             throw new OutOfBanknotesException(count);
         } else {
             if (curBanknotesCount == count) {
-                content.remove(denomination);
+                content.remove(nominal);
             } else if (curBanknotesCount > count) {
-                content.replace(denomination, curBanknotesCount - count);
+                content.replace(nominal, curBanknotesCount - count);
             }
             else {
                 throw new OutOfBanknotesException(count);

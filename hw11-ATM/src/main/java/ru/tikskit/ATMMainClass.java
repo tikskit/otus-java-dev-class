@@ -2,8 +2,8 @@ package ru.tikskit;
 
 import ru.tikskit.atm.ATM;
 import ru.tikskit.atm.CantWithdrawException;
-import ru.tikskit.atm.Denomination;
-import ru.tikskit.atm.MoneyCollection;
+import ru.tikskit.atm.MoneyPack;
+import ru.tikskit.atm.NominalImpl;
 import ru.tikskit.atm.NotEnoughMoneyException;
 
 public class ATMMainClass {
@@ -11,15 +11,17 @@ public class ATMMainClass {
 
         ATM atm = new ATM();
 
-        atm.put(Denomination.FIFTY, 53);
-        atm.put(Denomination.HUNDRED, 3);
-        atm.put(Denomination.FIVE_HUNDRED, 4);
-        atm.put(Denomination.THOUSAND, 6);
+        atm.put(new MoneyPack()
+                .addBanknotes(new NominalImpl(50), 47)
+                /*.addBanknotes(new NominalImpl(100), 30)
+                .addBanknotes(new NominalImpl(500), 10)
+                .addBanknotes(new NominalImpl(1000), 1)*/
+        );
 
         try {
             System.out.println(String.format("В банкомате: %d", atm.calcTotalAmount()));
 
-            MoneyCollection mp = atm.get(10650);
+            MoneyPack mp = atm.get(100);
             System.out.println(mp.toString());
             System.out.println(String.format("В банкомате: %d", atm.calcTotalAmount()));
         } catch (NotEnoughMoneyException | CantWithdrawException e) {
