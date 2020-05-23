@@ -3,20 +3,20 @@ package ru.tikskit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.tikskit.atm.ATM;
+import ru.tikskit.atm.ATMImpl;
 import ru.tikskit.atm.CantWithdrawException;
+import ru.tikskit.atm.Denomination;
 import ru.tikskit.atm.MoneyPack;
-import ru.tikskit.atm.NominalImpl;
 import ru.tikskit.atm.NotEnoughMoneyException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ATMTest {
-    private ATM atm;
+public class ATMImplTest {
+    private ATMImpl atm;
 
     @BeforeEach
     public void setUp() {
-        atm = new ATM();
+        atm = new ATMImpl();
     }
 
     @DisplayName("Проверяем, что до наполнения банкомат пустой")
@@ -29,38 +29,23 @@ public class ATMTest {
     @Test
     public void checkATMStuffedRight() {
         atm.put(new MoneyPack()
-                .addBanknotes(new NominalImpl(50), 1)
-                .addBanknotes(new NominalImpl(100), 30)
-                .addBanknotes(new NominalImpl(500), 10)
-                .addBanknotes(new NominalImpl(1000), 1)
+                .addBanknotes(Denomination.FIFTY, 1)
+                .addBanknotes(Denomination.HUNDRED, 30)
+                .addBanknotes(Denomination.FIVE_HUNDRED, 10)
+                .addBanknotes(Denomination.THOUSAND, 1)
         );
 
         assertEquals(atm.calcTotalAmount(), 9050);
-    }
-
-    @DisplayName("Проверяем, что добавление в банкомат купюры неверного номинала вызывает IllegalArgumentException")
-    @Test
-    public void checkWrongNominalThrowsException() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            atm.put(new MoneyPack().addBanknotes(new NominalImpl(0), 1));
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            atm.put(new MoneyPack().addBanknotes(new NominalImpl(-110), 1));
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            atm.put(new MoneyPack().addBanknotes(new NominalImpl(60), 1));
-        });
-
     }
 
     @DisplayName("Проверяем, что добавление в банкомат неверного количества купюр вызывает IllegalArgumentException")
     @Test
     public void checkWrongBanknotesCountThrowsException() {
         assertThrows(IllegalArgumentException.class, () -> {
-            atm.put(new MoneyPack().addBanknotes(new NominalImpl(50), 0));
+            atm.put(new MoneyPack().addBanknotes(Denomination.FIFTY, 0));
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            atm.put(new MoneyPack().addBanknotes(new NominalImpl(100), -1));
+            atm.put(new MoneyPack().addBanknotes(Denomination.HUNDRED, -1));
         });
 
     }
@@ -69,11 +54,11 @@ public class ATMTest {
     @Test
     public void checkNotEnoughMoneyExceptionThrowsWhenNotEnough() {
         atm.put(new MoneyPack()
-                .addBanknotes(new NominalImpl(50), 1)
+                .addBanknotes(Denomination.FIFTY, 1)
         );
 
         assertThrows(NotEnoughMoneyException.class, () -> {
-            atm.get(100);
+            atm.withdraw(100);
         });
     }
 
@@ -81,7 +66,7 @@ public class ATMTest {
     @Test
     public void checkNotEnoughMoneyExceptionThrowsEmpty() {
         assertThrows(NotEnoughMoneyException.class, () -> {
-            atm.get(100);
+            atm.withdraw(100);
         });
     }
 
@@ -89,7 +74,7 @@ public class ATMTest {
     @Test
     public void checkZeroWithdrawAmountThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> {
-            atm.get(0);
+            atm.withdraw(0);
         });
     }
 
@@ -97,7 +82,7 @@ public class ATMTest {
     @Test
     public void checkWrongWithdrawAmountThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> {
-            atm.get(-10);
+            atm.withdraw(-10);
         });
     }
 
@@ -105,10 +90,10 @@ public class ATMTest {
     @Test
     public void checkWrongWithdrawAmountThrowsCantWithdrawException1() {
         atm.put(new MoneyPack()
-                .addBanknotes(new NominalImpl(50), 1)
+                .addBanknotes(Denomination.FIFTY, 1)
         );
         assertThrows(CantWithdrawException.class, () -> {
-            atm.get(15);
+            atm.withdraw(15);
         });
     }
 }
