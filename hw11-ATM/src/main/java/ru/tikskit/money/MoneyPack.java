@@ -1,4 +1,4 @@
-package ru.tikskit.atm;
+package ru.tikskit.money;
 
 import java.util.HashMap;
 import java.util.Map;

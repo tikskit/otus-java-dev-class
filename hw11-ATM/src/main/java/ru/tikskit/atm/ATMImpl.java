@@ -1,12 +1,15 @@
 package ru.tikskit.atm;
 
+import ru.tikskit.money.Denomination;
+import ru.tikskit.money.MoneyPack;
+
 public class ATMImpl implements ATM {
-    private final Cells cells = new CellsImpl();
+    private final BanknotesStorage banknotesStorage = new BanknotesStorageImpl();
 
     @Override
     public void put(MoneyPack moneyPack) {
         for (Denomination d : moneyPack.getDenominations()) {
-            cells.put(d, moneyPack.getBanknotesCount(d));
+            banknotesStorage.put(d, moneyPack.getBanknotesCount(d));
         }
     }
 
@@ -25,7 +28,7 @@ public class ATMImpl implements ATM {
 
     @Override
     public int calcTotalAmount() {
-        return cells.calcTotalAmount();
+        return banknotesStorage.calcTotalAmount();
     }
 
     private MoneyPack withdrawBanknotes(Denomination denomination, int moneyAmount) throws
@@ -34,12 +37,12 @@ public class ATMImpl implements ATM {
         MoneyPack res = new MoneyPack();
 
         int banknotesNeeded = moneyAmount / denomination.getValue();
-        int banknotesAvailable = cells.getBanknotesCount(denomination);
+        int banknotesAvailable = banknotesStorage.getBanknotesCount(denomination);
         int banknotesUsed = Math.min(banknotesNeeded, banknotesAvailable);
 
         if (banknotesUsed > 0) {
             try {
-                cells.withdraw(denomination, banknotesUsed);
+                banknotesStorage.withdraw(denomination, banknotesUsed);
             } catch (OutOfBanknotesException e) {
                 /* Ошибки не должно быть, потому что выше мы проверяем количество доступных банкнот. Но этот метод
                 выкидывает OutOfBanknotesException, поэтому просто перевыкидываем RuntimeException */

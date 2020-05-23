@@ -1,17 +1,19 @@
 package ru.tikskit.atm;
 
+import ru.tikskit.money.Denomination;
+
 import java.util.HashMap;
 import java.util.Map;
 
-class CellsImpl implements Cells {
+class BanknotesStorageImpl implements BanknotesStorage {
     private final Map<Denomination, BanknotesCell> cells;
 
-    public CellsImpl() {
+    public BanknotesStorageImpl() {
         Denomination[] denominations = Denomination.values();
         cells = new HashMap<>(denominations.length);
 
         for (Denomination d : denominations) {
-            cells.put(d, new BanknotesCellImpl(d));
+            cells.put(d, new BanknotesCellImpl());
         }
     }
 

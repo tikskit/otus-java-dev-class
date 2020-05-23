@@ -7,8 +7,4 @@ public class CantWithdrawException extends ATMException {
     public CantWithdrawException(int amount) {
         super(String.format("Невозможно выдать сумму: %d", amount));
     }
-
-    public CantWithdrawException(Throwable cause) {
-        super(cause);
-    }
 }

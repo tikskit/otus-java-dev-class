@@ -1,5 +1,8 @@
-package ru.tikskit.atm;
+package ru.tikskit.money;
 
+/**
+ * Номинал банкноты
+ */
 public enum Denomination {
     FIFTY(50),
     HUNDRED(100),

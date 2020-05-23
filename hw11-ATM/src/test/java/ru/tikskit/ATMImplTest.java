@@ -5,8 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.tikskit.atm.ATMImpl;
 import ru.tikskit.atm.CantWithdrawException;
-import ru.tikskit.atm.Denomination;
-import ru.tikskit.atm.MoneyPack;
+import ru.tikskit.money.Denomination;
+import ru.tikskit.money.MoneyPack;
 import ru.tikskit.atm.NotEnoughMoneyException;
 
 import static org.junit.jupiter.api.Assertions.*;

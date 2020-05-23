@@ -3,11 +3,6 @@ package ru.tikskit.atm;
 class BanknotesCellImpl implements BanknotesCell {
     // Количество банкнот в ячейке
     private int count = 0;
-    private Denomination denomination;
-
-    public BanknotesCellImpl(Denomination denomination) {
-        this.denomination = denomination;
-    }
 
     @Override
     public void put(int count) {
@@ -31,8 +26,4 @@ class BanknotesCellImpl implements BanknotesCell {
         return count;
     }
 
-    @Override
-    public Denomination getDenomination() {
-        return denomination;
-    }
 }
