@@ -19,7 +19,4 @@ public enum Denomination {
         return value;
     }
 
-    public static Denomination getBiggest() {
-        return THOUSAND;
-    }
 }

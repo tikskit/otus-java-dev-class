@@ -9,10 +9,9 @@ class BanknotesStorageImpl implements BanknotesStorage {
     private final Map<Denomination, BanknotesCell> cells;
 
     public BanknotesStorageImpl() {
-        Denomination[] denominations = Denomination.values();
-        cells = new HashMap<>(denominations.length);
+        cells = new HashMap<>();
 
-        for (Denomination d : denominations) {
+        for (Denomination d : Denomination.values()) {
             cells.put(d, new BanknotesCellImpl());
         }
     }

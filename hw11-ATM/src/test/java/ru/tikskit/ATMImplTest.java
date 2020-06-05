@@ -50,6 +50,58 @@ public class ATMImplTest {
 
     }
 
+    @DisplayName("Проверяем, что если в банкомате по одной купюре, то при снятии будет достаточно денег")
+    @Test
+    public void checkWithdraw1650() {
+        atm.put(new MoneyPack()
+                .addBanknotes(Denomination.FIFTY, 1)
+                .addBanknotes(Denomination.HUNDRED, 1)
+                .addBanknotes(Denomination.FIVE_HUNDRED, 1)
+                .addBanknotes(Denomination.THOUSAND, 1)
+        );
+
+        assertDoesNotThrow(() -> {
+            atm.withdraw(1650);
+        });
+    }
+
+    @Test
+    public void checkWithdraw3150() {
+        atm.put(new MoneyPack()
+                .addBanknotes(Denomination.FIFTY, 30)
+                .addBanknotes(Denomination.HUNDRED, 1)
+                .addBanknotes(Denomination.FIVE_HUNDRED, 1)
+                .addBanknotes(Denomination.THOUSAND, 1)
+        );
+
+        assertDoesNotThrow(() -> {
+            atm.withdraw(3100);
+        });
+    }
+
+    @Test
+    public void checkWithdraw3150_1() {
+        atm.put(new MoneyPack()
+                .addBanknotes(Denomination.FIFTY, 3)
+                .addBanknotes(Denomination.THOUSAND, 3)
+        );
+
+        assertDoesNotThrow(() -> {
+            atm.withdraw(3100);
+        });
+    }
+    @Test
+    public void checkWithdraw3150_2() {
+        atm.put(new MoneyPack()
+                .addBanknotes(Denomination.FIFTY, 60)
+                .addBanknotes(Denomination.THOUSAND, 3)
+        );
+
+        assertDoesNotThrow(() -> {
+            atm.withdraw(3100);
+        });
+    }
+
     @DisplayName("Проверяем, что если в банкомате недостаточно денег для снятия, то выбрасывается NotEnoughMoneyException")
     @Test
     public void checkNotEnoughMoneyExceptionThrowsWhenNotEnough() {

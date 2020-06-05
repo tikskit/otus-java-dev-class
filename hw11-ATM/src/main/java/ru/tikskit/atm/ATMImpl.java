@@ -3,6 +3,8 @@ package ru.tikskit.atm;
 import ru.tikskit.money.Denomination;
 import ru.tikskit.money.MoneyPack;
 
+import java.util.Arrays;
+
 public class ATMImpl implements ATM {
     private final BanknotesStorage banknotesStorage = new BanknotesStorageImpl();
 
@@ -23,7 +25,7 @@ public class ATMImpl implements ATM {
             throw new NotEnoughMoneyException(moneyAmount);
         }
 
-        return withdrawBanknotes(Denomination.getBiggest(), moneyAmount);
+        return withdrawBanknotes(moneyAmount);
     }
 
     @Override
@@ -31,63 +33,37 @@ public class ATMImpl implements ATM {
         return banknotesStorage.calcTotalAmount();
     }
 
-    private MoneyPack withdrawBanknotes(Denomination denomination, int moneyAmount) throws
-            CantWithdrawException {
-
+    private MoneyPack withdrawBanknotes(int moneyAmount) throws CantWithdrawException {
         MoneyPack res = new MoneyPack();
 
-        int banknotesNeeded = moneyAmount / denomination.getValue();
-        int banknotesAvailable = banknotesStorage.getBanknotesCount(denomination);
-        int banknotesUsed = Math.min(banknotesNeeded, banknotesAvailable);
+        Denomination[] denominations = Denomination.values();
+        Arrays.sort(denominations, (o1, o2) -> o2.getValue() - o1.getValue());
 
-        if (banknotesUsed > 0) {
-            try {
-                banknotesStorage.withdraw(denomination, banknotesUsed);
-            } catch (OutOfBanknotesException e) {
+        for (Denomination d : denominations) {
+            int banknotesNeeded = moneyAmount / d.getValue();
+            int banknotesAvailable = banknotesStorage.getBanknotesCount(d);
+            int banknotesUsed = Math.min(banknotesNeeded, banknotesAvailable);
+
+            if (banknotesUsed > 0) {
+                try {
+                    banknotesStorage.withdraw(d, banknotesUsed);
+                } catch (OutOfBanknotesException e) {
                 /* Ошибки не должно быть, потому что выше мы проверяем количество доступных банкнот. Но этот метод
                 выкидывает OutOfBanknotesException, поэтому просто перевыкидываем RuntimeException */
-                throw new RuntimeException("Произошла ошибка при попытке уменьшить количество банкнот в хранилище!", e);
+                    throw new RuntimeException("Произошла ошибка при попытке уменьшить количество банкнот в хранилище!", e);
+                }
+                int moneyWithdrawn = banknotesUsed * d.getValue();
+                moneyAmount -= moneyWithdrawn;
+                res.add(d, banknotesUsed);
             }
-            int moneyWithdrawn = banknotesUsed * denomination.getValue();
-            int remaindersToWithdraw = moneyAmount - moneyWithdrawn;
-            res.add(denomination, banknotesUsed);
-            if (remaindersToWithdraw > 0) {
-                withdrawNext(res, denomination, remaindersToWithdraw);
-            }
-
-        } else {
-            withdrawNext(res, denomination, moneyAmount);
         }
 
-        return res;
-    }
-
-    private void withdrawNext(MoneyPack moneyPack, Denomination denomination, int moneyAmount) throws
-            CantWithdrawException {
-
-        Denomination smallerDenomination = getSmallerDenomination(denomination);
-        if (smallerDenomination == null) {
+        if (moneyAmount > 0) {
             throw new CantWithdrawException(moneyAmount);
         }
 
-        moneyPack.add(withdrawBanknotes(smallerDenomination, moneyAmount));
-    }
 
-    private Denomination getSmallerDenomination(Denomination denomination) {
-        switch (denomination) {
-            case FIFTY:
-                return null;
-            case HUNDRED:
-                return Denomination.FIFTY;
-            case FIVE_HUNDRED:
-                return Denomination.HUNDRED;
-            case THOUSAND:
-                return Denomination.FIVE_HUNDRED;
-            default:
-                throw new IllegalArgumentException(String.format("Некорректный номинал банкноты: %d!",
-                        denomination.getValue()));
-        }
-
+        return res;
     }
 
 }

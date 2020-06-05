@@ -22,7 +22,7 @@ public class ATMMainClass {
         try {
             System.out.println(String.format("В банкомате: %d", atm.calcTotalAmount()));
 
-            MoneyPack mp = atm.withdraw(750);
+            MoneyPack mp = atm.withdraw(1650);
             System.out.println(mp.toString());
             System.out.println(String.format("В банкомате: %d", atm.calcTotalAmount()));
         } catch (NotEnoughMoneyException | CantWithdrawException e) {
