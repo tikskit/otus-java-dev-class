@@ -1,4 +1,4 @@
-package ru.tikskit.atm.remote.accesschecking;
+package ru.tikskit.remote.accesschecking;
 
 abstract class BaseHandlerImpl implements Handler {
 

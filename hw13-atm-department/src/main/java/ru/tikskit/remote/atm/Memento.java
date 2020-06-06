@@ -1,6 +1,6 @@
-package ru.tikskit.atm.remote;
+package ru.tikskit.remote.atm;
 
-import ru.tikskit.atm.remote.accesschecking.RemoteAccessException;
+import ru.tikskit.remote.accesschecking.RemoteAccessException;
 
 public interface Memento {
     void restore(String user, String pass) throws RemoteAccessException;

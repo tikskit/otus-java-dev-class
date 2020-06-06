@@ -1,4 +1,4 @@
-package ru.tikskit.atm.remote.accesschecking;
+package ru.tikskit.remote.accesschecking;
 
 public interface Handler {
     Handler setNext(Handler handler);

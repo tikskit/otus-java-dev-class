@@ -1,4 +1,4 @@
-package ru.tikskit.atm.remote.accesschecking;
+package ru.tikskit.remote.accesschecking;
 
 public class RoleHandler extends BaseHandlerImpl {
     private final String[] remoteUsers;

@@ -1,15 +1,16 @@
-package ru.tikskit.atm.remote;
+package ru.tikskit.remote.atm;
 
 import ru.tikskit.atm.ATMImpl;
 import ru.tikskit.atm.BanknotesStorage;
-import ru.tikskit.atm.remote.accesschecking.Handler;
-import ru.tikskit.atm.remote.accesschecking.RemoteAccessException;
-import ru.tikskit.atm.remote.accesschecking.RoleHandler;
-import ru.tikskit.atm.remote.accesschecking.UserExistsHandler;
+import ru.tikskit.remote.accesschecking.Handler;
+import ru.tikskit.remote.accesschecking.RemoteAccessException;
+import ru.tikskit.remote.accesschecking.RoleHandler;
+import ru.tikskit.remote.accesschecking.UserExistsHandler;
 
 public class ATMRemoteImpl extends ATMImpl implements ATMRemote{
     private final int id;
     private final Handler remoteAccessHandler;
+
 
     public ATMRemoteImpl(int id) {
         this.id = id;

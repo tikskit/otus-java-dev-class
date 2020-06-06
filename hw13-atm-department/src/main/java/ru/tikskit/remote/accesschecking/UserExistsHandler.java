@@ -1,4 +1,4 @@
-package ru.tikskit.atm.remote.accesschecking;
+package ru.tikskit.remote.accesschecking;
 
 import java.util.HashMap;
 import java.util.Map;
