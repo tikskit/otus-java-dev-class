@@ -26,4 +26,10 @@ class BanknotesCellImpl implements BanknotesCell {
         return count;
     }
 
+    @Override
+    public BanknotesCell copy() {
+        BanknotesCellImpl res = new BanknotesCellImpl();
+        res.count = count;
+        return res;
+    }
 }

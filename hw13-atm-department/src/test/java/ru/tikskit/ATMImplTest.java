@@ -3,8 +3,10 @@ package ru.tikskit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.tikskit.atm.ATM;
 import ru.tikskit.atm.ATMImpl;
 import ru.tikskit.atm.CantWithdrawException;
+import ru.tikskit.department.ATMIdProducer;
 import ru.tikskit.money.Denomination;
 import ru.tikskit.money.MoneyPack;
 import ru.tikskit.atm.NotEnoughMoneyException;
@@ -12,11 +14,11 @@ import ru.tikskit.atm.NotEnoughMoneyException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ATMImplTest {
-    private ATMImpl atm;
+    private ATM atm;
 
     @BeforeEach
     public void setUp() {
-        atm = new ATMImpl();
+        atm = new ATMImpl(ATMIdProducer.getInstance().requestId());
     }
 
     @DisplayName("Проверяем, что до наполнения банкомат пустой")
@@ -147,5 +149,17 @@ public class ATMImplTest {
         assertThrows(CantWithdrawException.class, () -> {
             atm.withdraw(15);
         });
+    }
+    @DisplayName("Проверяем, что если произошла ошибка CantWithdrawException, то количество денег в банкомате не изменилось")
+    @Test
+    public void checkCantWithdrawExceptionDoesntChangeMoney() {
+        atm.put(new MoneyPack()
+                .addBanknotes(Denomination.FIFTY, 1)
+        );
+        assertThrows(CantWithdrawException.class, () -> {
+            atm.withdraw(15);
+        });
+
+        assertEquals(atm.calcTotalAmount(), 50);
     }
 }

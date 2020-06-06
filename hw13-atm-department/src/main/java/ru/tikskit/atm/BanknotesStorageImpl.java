@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class BanknotesStorageImpl implements BanknotesStorage {
-    private final Map<Denomination, BanknotesCell> cells;
+    private Map<Denomination, BanknotesCell> cells;
 
     public BanknotesStorageImpl() {
         cells = new HashMap<>();
@@ -47,5 +47,30 @@ class BanknotesStorageImpl implements BanknotesStorage {
         cells.get(denomination).get(count);
     }
 
+    @Override
+    public Memento store() {
+        return new MementoImpl();
+    }
 
+    private class MementoImpl implements BanknotesStorage.Memento {
+        private final Map<Denomination, BanknotesCell> cells;
+
+        public MementoImpl() {
+            cells = new HashMap<>();
+
+            copyCells(BanknotesStorageImpl.this.cells, cells);
+        }
+
+        @Override
+        public void restore() {
+            BanknotesStorageImpl.this.cells = new HashMap<>();
+            copyCells(cells, BanknotesStorageImpl.this.cells);
+        }
+
+        private void copyCells(Map<Denomination, BanknotesCell> srcCells, Map<Denomination, BanknotesCell> tarCells) {
+            for (Map.Entry<Denomination, BanknotesCell> m: srcCells.entrySet()) {
+                tarCells.put(m.getKey(), m.getValue().copy());
+            }
+        }
+    }
 }
