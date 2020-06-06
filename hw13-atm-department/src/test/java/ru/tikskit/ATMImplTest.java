@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import ru.tikskit.atm.ATM;
 import ru.tikskit.atm.ATMImpl;
 import ru.tikskit.atm.CantWithdrawException;
-import ru.tikskit.department.ATMIdProducer;
 import ru.tikskit.money.Denomination;
 import ru.tikskit.money.MoneyPack;
 import ru.tikskit.atm.NotEnoughMoneyException;
@@ -18,7 +17,7 @@ public class ATMImplTest {
 
     @BeforeEach
     public void setUp() {
-        atm = new ATMImpl(ATMIdProducer.getInstance().requestId());
+        atm = new ATMImpl();
     }
 
     @DisplayName("Проверяем, что до наполнения банкомат пустой")

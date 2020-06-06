@@ -42,6 +42,15 @@ public class MoneyPack {
         return content.get(denomination) == null ? 0 : count;
     }
 
+    public int calcTotalSum() {
+        int res = 0;
+        for (Map.Entry<Denomination, Integer> m : content.entrySet()) {
+            res += m.getKey().getValue() * m.getValue();
+        }
+
+        return res;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

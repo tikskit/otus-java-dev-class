@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ATMDepartmentImpl implements ATMDepartment, DeptEventsNotifier {
-    private static final int ATM_COUNT = 20;
+    private final int atmCount;
     private final String user;
     private final String pass;
     private final Set<DeptEventsListener> eventsListeners = new HashSet<>();
@@ -20,7 +20,8 @@ public class ATMDepartmentImpl implements ATMDepartment, DeptEventsNotifier {
     private final Set<ATMRemote> atmSet;
     private final Set<Memento> initStates;
 
-    public ATMDepartmentImpl(String user, String pass) throws RemoteAccessException {
+    public ATMDepartmentImpl(int atmCount, String user, String pass) throws RemoteAccessException {
+        this.atmCount = atmCount;
         this.user = user;
         this.pass = pass;
         atmSet = populateATMSet();
@@ -50,14 +51,8 @@ public class ATMDepartmentImpl implements ATMDepartment, DeptEventsNotifier {
     }
 
     @Override
-    public void initAll() {
+    public void initAll(MoneyPack moneyPack) {
         for (DeptEventsListener listener : eventsListeners) {
-            MoneyPack moneyPack = new MoneyPack();
-            moneyPack.addBanknotes(Denomination.FIFTY, 50).
-                    addBanknotes(Denomination.HUNDRED, 100).
-                    addBanknotes(Denomination.FIVE_HUNDRED, 500).
-                    addBanknotes(Denomination.THOUSAND, 1000);
-
             listener.init(new ChargeCommandImpl(moneyPack));
         }
     }
@@ -70,7 +65,7 @@ public class ATMDepartmentImpl implements ATMDepartment, DeptEventsNotifier {
     private Set<ATMRemote> populateATMSet() {
         Set<ATMRemote> res = new HashSet<>();
 
-        for (int i = 0; i < ATM_COUNT; i++) {
+        for (int i = 0; i < atmCount; i++) {
             res.add(ATMFactory.createATMRemote(ATMIdProducer.getInstance().requestId(), this));
         }
 

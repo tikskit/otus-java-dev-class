@@ -1,5 +1,6 @@
 package ru.tikskit.department;
 
+import ru.tikskit.money.MoneyPack;
 import ru.tikskit.remote.atm.DeptEventsListener;
 
 public interface DeptEventsNotifier {
@@ -7,5 +8,5 @@ public interface DeptEventsNotifier {
     void delListener(DeptEventsListener listener);
 
     int requestTotalMoneyAmount();
-    void initAll();
+    void initAll(MoneyPack moneyPack);
 }
