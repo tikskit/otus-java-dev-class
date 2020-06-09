@@ -13,7 +13,7 @@ public class DeptEventsListenerImpl implements DeptEventsListener {
     }
 
     @Override
-    public void init(InitCommand initCommand) {
-        initCommand.execute(atm);
+    public void init(ATMCommand atmCommand) {
+        atmCommand.execute(atm);
     }
 }

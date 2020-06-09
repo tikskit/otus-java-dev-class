@@ -2,9 +2,9 @@ package ru.tikskit.department;
 
 import ru.tikskit.atm.ATM;
 import ru.tikskit.money.MoneyPack;
-import ru.tikskit.remote.atm.InitCommand;
+import ru.tikskit.remote.atm.ATMCommand;
 
-public class ChargeCommandImpl implements InitCommand {
+public class ChargeCommandImpl implements ATMCommand {
     private final MoneyPack moneyPack;
 
     public ChargeCommandImpl(MoneyPack moneyPack) {
