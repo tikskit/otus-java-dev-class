@@ -1,12 +1,11 @@
 package ru.tikskit.department;
 
 import ru.tikskit.atm.ATMFactory;
-import ru.tikskit.money.Denomination;
 import ru.tikskit.money.MoneyPack;
 import ru.tikskit.remote.atm.ATMRemote;
 import ru.tikskit.remote.atm.DeptEventsListener;
 import ru.tikskit.remote.atm.Memento;
-import ru.tikskit.remote.accesschecking.RemoteAccessException;
+import ru.tikskit.remote.RemoteAccessException;
 
 import java.util.HashSet;
 import java.util.Set;

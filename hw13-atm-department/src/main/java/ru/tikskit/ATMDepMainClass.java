@@ -3,7 +3,7 @@ package ru.tikskit;
 import ru.tikskit.department.DeptEventsNotifier;
 import ru.tikskit.money.Denomination;
 import ru.tikskit.money.MoneyPack;
-import ru.tikskit.remote.accesschecking.RemoteAccessException;
+import ru.tikskit.remote.RemoteAccessException;
 import ru.tikskit.department.ATMDepartment;
 import ru.tikskit.department.ATMDepartmentImpl;
 

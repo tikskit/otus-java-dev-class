@@ -1,4 +1,4 @@
-package ru.tikskit.remote.accesschecking;
+package ru.tikskit.remote;
 
 import ru.tikskit.atm.ATMException;
 

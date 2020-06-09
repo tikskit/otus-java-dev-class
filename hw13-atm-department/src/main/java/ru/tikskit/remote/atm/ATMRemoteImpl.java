@@ -2,38 +2,24 @@ package ru.tikskit.remote.atm;
 
 import ru.tikskit.atm.ATMImpl;
 import ru.tikskit.atm.BanknotesStorage;
-import ru.tikskit.remote.accesschecking.Handler;
-import ru.tikskit.remote.accesschecking.RemoteAccessException;
-import ru.tikskit.remote.accesschecking.RoleHandler;
-import ru.tikskit.remote.accesschecking.UserExistsHandler;
+import ru.tikskit.remote.RemoteAccessException;
 
 public class ATMRemoteImpl extends ATMImpl implements ATMRemote{
     private final int id;
-    private final Handler remoteAccessHandler;
 
 
     public ATMRemoteImpl(int id) {
         this.id = id;
-        remoteAccessHandler = new UserExistsHandler();
-        remoteAccessHandler.setNext(new RoleHandler());
     }
 
     @Override
-    public int getId(String user, String pass) throws RemoteAccessException {
-        if (remoteAccessHandler.checkAccess(user, pass)) {
-            return id;
-        } else {
-            throw new RemoteAccessException("Нет прав доступа!");
-        }
+    public int getId(String user, String pass) {
+        return id;
     }
 
     @Override
-    public Memento store(String user, String pass) throws RemoteAccessException {
-        if (remoteAccessHandler.checkAccess(user, pass)) {
-            return new MementoImpl();
-        } else {
-            throw new RemoteAccessException("Нет прав доступа!");
-        }
+    public Memento store(String user, String pass) {
+        return new MementoImpl();
     }
 
     private class MementoImpl implements Memento {
@@ -44,12 +30,8 @@ public class ATMRemoteImpl extends ATMImpl implements ATMRemote{
         }
 
         @Override
-        public void restore(String user, String pass) throws RemoteAccessException {
-            if (remoteAccessHandler.checkAccess(user, pass)) {
-                banknotesStorageMemento.restore();
-            } else {
-                throw new RemoteAccessException("Нет прав доступа!");
-            }
+        public void restore(String user, String pass) {
+            banknotesStorageMemento.restore();
         }
     }
 

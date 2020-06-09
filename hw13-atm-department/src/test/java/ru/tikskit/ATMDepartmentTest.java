@@ -9,7 +9,7 @@ import ru.tikskit.department.ATMDepartmentImpl;
 import ru.tikskit.department.DeptEventsNotifier;
 import ru.tikskit.money.Denomination;
 import ru.tikskit.money.MoneyPack;
-import ru.tikskit.remote.accesschecking.RemoteAccessException;
+import ru.tikskit.remote.RemoteAccessException;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,17 +26,6 @@ public class ATMDepartmentTest {
     public void setUp() throws RemoteAccessException {
         dept = new ATMDepartmentImpl(ATM_AMOUNT, USER, PASS);
         deptEventsNotifier = (DeptEventsNotifier) dept;
-    }
-
-    @DisplayName("Проверяем, что если указать неправильные логин и пароль, то создание объекта ATMDepartmentImpl выкинет исключение RemoteAccessException")
-    @Test
-    public void checkWrongUserPassThrowsException() {
-        assertThrows(RemoteAccessException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                new ATMDepartmentImpl(1, "wrongUser", "wrongPass");
-            }
-        });
     }
 
     @DisplayName("Проверяем, что после загрузки всех банкоматов, сумма правильная")
