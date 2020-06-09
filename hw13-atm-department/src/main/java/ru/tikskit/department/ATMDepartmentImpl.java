@@ -5,32 +5,27 @@ import ru.tikskit.money.MoneyPack;
 import ru.tikskit.remote.atm.ATMRemote;
 import ru.tikskit.remote.atm.DeptEventsListener;
 import ru.tikskit.remote.atm.Memento;
-import ru.tikskit.remote.RemoteAccessException;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class ATMDepartmentImpl implements ATMDepartment, DeptEventsNotifier {
     private final int atmCount;
-    private final String user;
-    private final String pass;
     private final Set<DeptEventsListener> eventsListeners = new HashSet<>();
 
     private final Set<ATMRemote> atmSet;
     private final Set<Memento> initStates;
 
-    public ATMDepartmentImpl(int atmCount, String user, String pass) throws RemoteAccessException {
+    public ATMDepartmentImpl(int atmCount) {
         this.atmCount = atmCount;
-        this.user = user;
-        this.pass = pass;
         atmSet = populateATMSet();
         initStates = storeAll();
     }
 
     @Override
-    public void restore() throws RemoteAccessException {
+    public void restore() {
         for (Memento m : initStates) {
-            m.restore(user, pass);
+            m.restore();
         }
     }
 
@@ -71,10 +66,10 @@ public class ATMDepartmentImpl implements ATMDepartment, DeptEventsNotifier {
         return res;
     }
 
-    private Set<Memento> storeAll() throws RemoteAccessException {
+    private Set<Memento> storeAll() {
         Set<Memento> res = new HashSet<>();
         for (ATMRemote atm : atmSet) {
-            res.add(atm.store(user, pass));
+            res.add(atm.store());
         }
 
         return res;
