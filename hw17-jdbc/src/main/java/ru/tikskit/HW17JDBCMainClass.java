@@ -2,7 +2,6 @@ package ru.tikskit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.DbServiceDemo;
 import ru.otus.core.dao.AccountDaoImpl;
 import ru.otus.core.dao.UserDaoImpl;
 import ru.otus.core.model.Account;
@@ -10,7 +9,6 @@ import ru.otus.core.model.User;
 import ru.otus.core.service.DbServiceAccountImpl;
 import ru.otus.core.service.DbServiceUserImpl;
 import ru.otus.h2.DataSourceH2;
-import ru.otus.jdbc.DbExecutorImpl;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
 import javax.sql.DataSource;

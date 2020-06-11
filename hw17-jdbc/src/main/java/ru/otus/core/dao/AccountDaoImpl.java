@@ -1,7 +1,6 @@
 package ru.otus.core.dao;
 
 import ru.otus.core.model.Account;
-import ru.otus.core.model.User;
 import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.jdbc.mapper.JdbcMapper;
 import ru.otus.jdbc.mapper.JdbcMapperImpl;

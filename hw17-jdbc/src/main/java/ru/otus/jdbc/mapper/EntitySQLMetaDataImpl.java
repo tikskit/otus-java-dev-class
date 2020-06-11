@@ -62,9 +62,7 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData{
 
     private String getInsertValuesStr() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < meta.getFieldsWithoutId().size(); i++) {
-            sb.append("?, ");
-        }
+        sb.append("?, ".repeat(meta.getFieldsWithoutId().size()));
         return removeComma(sb);
     }
 
