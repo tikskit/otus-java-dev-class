@@ -11,6 +11,8 @@ dependencies {
     // This dependency is used by the application.
     testImplementation 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    implementation 'com.h2database:h2'
+    implementation 'ch.qos.logback:logback-classic'
 }
 
 shadowJar {
