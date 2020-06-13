@@ -1,10 +1,8 @@
 package ru.tikskit.mygson;
 
-import ru.tikskit.mygson.arrays.ArrayItemFactory;
-import ru.tikskit.mygson.arrays.ArrayItemTypeStrategy;
-
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonValue;
 import java.lang.reflect.Array;
 import java.util.Collection;
 
@@ -17,11 +15,11 @@ class CollectionToJson {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
         for (Object o : collection) {
-            ArrayItemTypeStrategy strategy = ArrayItemFactory.createTypeStrategy(o.getClass());
-            if (strategy == null) {
+            JsonValue value = JsonValueFactory.createJsonValue(o);
+            if (value == null) {
                 System.out.println("Элемент коллекции пропущен!");
             } else {
-                strategy.execute(o, arrayBuilder);
+                arrayBuilder.add(value);
             }
         }
 
@@ -36,11 +34,11 @@ class CollectionToJson {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (int i = 0; i < Array.getLength(array); i++) {
             Object o = Array.get(array, i);
-            ArrayItemTypeStrategy strategy = ArrayItemFactory.createTypeStrategy(o.getClass());
-            if (strategy == null) {
+            JsonValue value = JsonValueFactory.createJsonValue(o);
+            if (value == null) {
                 System.out.println(String.format("Элемент коллекции #%d пропущен!", i));
             } else {
-                strategy.execute(o, arrayBuilder);
+                arrayBuilder.add(value);
             }
         }
 

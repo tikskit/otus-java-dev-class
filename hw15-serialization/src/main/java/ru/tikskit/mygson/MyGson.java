@@ -1,8 +1,5 @@
 package ru.tikskit.mygson;
 
-import ru.tikskit.mygson.arrays.ArrayItemFactory;
-import ru.tikskit.mygson.arrays.ArrayItemTypeStrategy;
-
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -63,11 +60,11 @@ public class MyGson {
 
         for (int i = 0; i < Array.getLength(object); i++) {
             Object itemObject = Array.get(object, i);
-            ArrayItemTypeStrategy strategy = ArrayItemFactory.createTypeStrategy(itemObject.getClass());
-            if (strategy == null) {
+            JsonValue value = JsonValueFactory.createJsonValue(itemObject);
+            if (value == null) {
                 System.out.println("Значение пропущено!");
             } else {
-                strategy.execute(itemObject, builder);
+                builder.add(value);
             }
         }
 

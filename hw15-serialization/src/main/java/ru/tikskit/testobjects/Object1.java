@@ -94,4 +94,31 @@ public class Object1 {
         result = 31 * result + Arrays.hashCode(integerArray);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Object1{" +
+                "charValue=" + charValue +
+                ", characterValue=" + characterValue +
+                ", intValue=" + intValue +
+                ", IntegerValue=" + IntegerValue +
+                ", stringValueNull='" + stringValueNull + '\'' +
+                ", stringValue='" + stringValue + '\'' +
+                ", boolValue=" + boolValue +
+                ", booleanValue=" + booleanValue +
+                ", doubleValue=" + doubleValue +
+                ", dValue=" + dValue +
+                ", longValue=" + longValue +
+                ", lValue=" + lValue +
+                ", intArray=" + Arrays.toString(intArray) +
+                ", collection=" + collection +
+                ", byteValue=" + byteValue +
+                ", byteObjValue=" + byteObjValue +
+                ", integerArray=" + Arrays.toString(integerArray) +
+                ", floatObjValue=" + floatObjValue +
+                ", floatValue=" + floatValue +
+                ", shortObjValue=" + shortObjValue +
+                ", shortValue=" + shortValue +
+                '}';
+    }
 }

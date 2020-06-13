@@ -14,18 +14,16 @@ public class MyGSONMainClass {
         MyGson myGson = new MyGson();
 //        String json = myGson.toJson(Collections.singletonList(1));
 //        String json = myGson.toJson(Collections.singletonList(1));
-        String json = myGson.toJson(10);
-//        String json = myGson.toJson(obj);
+        String json = myGson.toJson(obj);
 
 
         System.out.println(json);
 
-        Gson gson = new Gson();
-        String gsonStr = gson.toJson(Collections.singletonList(1));
-//        System.out.println(gsonStr);
-        System.out.println("gsonStr = " + gsonStr);
-//        Object1 obj2 = gson.fromJson(json, Object1.class);
-//        System.out.println(obj.equals(obj2));
+
+        var gson = new Gson();
+        Object obj2 = gson.fromJson(json, Object1.class);
+        System.out.println(obj2);
+
     }
 
 

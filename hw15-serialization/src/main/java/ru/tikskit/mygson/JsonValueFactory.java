@@ -15,6 +15,8 @@ public class JsonValueFactory {
             return createIntValue(value);
         } else if (isByte(value.getClass())) {
             return createByteValue(value);
+        } else if (isBoolean(value.getClass())) {
+            return createBooleanValue(value);
         } else if (isShort(value.getClass())) {
             return createShortValue(value);
         } else if (isFloat(value.getClass())) {
@@ -34,6 +36,14 @@ public class JsonValueFactory {
         } else {
             return null;
         }
+    }
+
+    private static JsonValue createBooleanValue(Object value) {
+        return (Boolean)value ? JsonValue.TRUE : JsonValue.FALSE;
+    }
+
+    private static boolean isBoolean(Class<?> clazz) {
+        return clazz == boolean.class || clazz == Boolean.class;
     }
 
     private static JsonValue createCharValue(Object value) {
