@@ -1,17 +1,18 @@
-package ru.tikskit.mygson.primitives;
+package ru.tikskit.mygson.fields;
 
 import javax.json.JsonObjectBuilder;
 
-class BooleanStrategy extends BaseStrategy implements TypeStrategy {
+class ByteStrategy extends BaseStrategy implements FieldTypeStrategy {
 
     public static boolean supportsType(Class<?> clazz) {
-        return clazz == Boolean.class || clazz == boolean.class;
+        return clazz == Byte.class || clazz == byte.class;
     }
 
     @Override
     public void execute(String name, Object value, JsonObjectBuilder target) {
         if (!addNull(name, value, target)){
-            target.add(name, (Boolean)value);
+            target.add(name, (Byte)value);
         }
     }
+
 }

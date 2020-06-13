@@ -1,7 +1,7 @@
 package ru.tikskit.mygson;
 
-import ru.tikskit.mygson.primitives.StrategyFactory;
-import ru.tikskit.mygson.primitives.TypeStrategy;
+import ru.tikskit.mygson.fields.FieldStrategyFactory;
+import ru.tikskit.mygson.fields.FieldTypeStrategy;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -32,7 +32,7 @@ class ObjectToJson {
     }
 
     private static void addSimpleField(Object object, Field field, JsonObjectBuilder builder) {
-        TypeStrategy typeStrategy = StrategyFactory.createStrategy(field.getType());
+        FieldTypeStrategy typeStrategy = FieldStrategyFactory.createStrategy(field.getType());
         if (typeStrategy == null) {
             System.out.println(String.format("Не найден обработчик для поля \"%s\"", field.getName()));
         } else {

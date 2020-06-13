@@ -1,8 +1,8 @@
-package ru.tikskit.mygson.primitives;
+package ru.tikskit.mygson.fields;
 
 import javax.json.JsonObjectBuilder;
 
-class DoubleStrategy extends BaseStrategy implements TypeStrategy {
+class DoubleStrategy extends BaseStrategy implements FieldTypeStrategy {
 
     public static boolean supportsType(Class<?> clazz) {
         return clazz == Double.class || clazz == double.class;

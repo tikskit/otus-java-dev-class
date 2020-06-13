@@ -1,17 +1,17 @@
-package ru.tikskit.mygson.primitives;
+package ru.tikskit.mygson.fields;
 
 import javax.json.JsonObjectBuilder;
 
-class LongStrategy extends BaseStrategy implements TypeStrategy {
-
+class ShortStrategy extends BaseStrategy implements FieldTypeStrategy {
     public static boolean supportsType(Class<?> clazz) {
-        return clazz == Long.class || clazz == long.class;
+        return clazz == Short.class || clazz == short.class;
     }
 
     @Override
     public void execute(String name, Object value, JsonObjectBuilder target) {
         if (!addNull(name, value, target)){
-            target.add(name, (Long)value);
+            target.add(name, (Short)value);
         }
     }
+
 }

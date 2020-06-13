@@ -1,7 +1,7 @@
-package ru.tikskit.mygson.primitives;
+package ru.tikskit.mygson.fields;
 
 import javax.json.JsonObjectBuilder;
 
-public interface TypeStrategy {
+public interface FieldTypeStrategy {
     void execute(String name, Object value, JsonObjectBuilder target);
 }

@@ -1,8 +1,8 @@
-package ru.tikskit.mygson.primitives;
+package ru.tikskit.mygson.fields;
 
-public class StrategyFactory {
+public class FieldStrategyFactory {
 
-    public static TypeStrategy createStrategy(Class<?> clazz){
+    public static FieldTypeStrategy createStrategy(Class<?> clazz){
         if (IntegerStrategy.supportsType(clazz)) {
             return new IntegerStrategy();
         } else if (StringStrategy.supportsType(clazz)) {

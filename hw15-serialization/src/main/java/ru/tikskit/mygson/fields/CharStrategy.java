@@ -1,10 +1,8 @@
-package ru.tikskit.mygson.primitives;
+package ru.tikskit.mygson.fields;
 
-import javax.json.Json;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 
-class CharStrategy extends BaseStrategy implements TypeStrategy {
+class CharStrategy extends BaseStrategy implements FieldTypeStrategy {
     public static boolean supportsType(Class<?> clazz) {
         return clazz == Character.class || clazz == char.class;
     }
