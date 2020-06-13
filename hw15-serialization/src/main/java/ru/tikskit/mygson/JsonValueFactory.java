@@ -5,7 +5,7 @@ import javax.json.JsonValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class JsonValueFactory {
+class JsonValueFactory {
     public static JsonValue createJsonValue(Object value) {
         if (value == null) {
             return null;
