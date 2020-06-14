@@ -37,6 +37,9 @@ allprojects {
             dependency("org.junit.jupiter:junit-jupiter-engine:${Versions.junit_jupiter_engine}")
             dependency("org.junit.jupiter:junit-jupiter-params:${Versions.junit_jupiter_params}")
             dependency("org.assertj:assertj-core:${Versions.assertj_core}")
+            dependency("com.h2database:h2:${Versions.h2}")
+            dependency("ch.qos.logback:logback-classic:${Versions.logback}")
+            dependency("org.hibernate:hibernate-core:${Versions.hibernate}")
         }
     }
 
