@@ -1,0 +1,36 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
+
+dependencies {
+    // This dependency is used by the application.
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    implementation("ch.qos.logback:logback-classic")
+    implementation("com.h2database:h2")
+    implementation("org.hibernate:hibernate-core")
+}
+
+shadowJar {
+    archiveBaseName.set('hibernate-orm')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+
+    manifest {
+        attributes 'Main-Class': 'ru.tikskit.HW19HibernateMainClass'
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+tasks.build.dependsOn tasks.shadowJar
