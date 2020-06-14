@@ -1,19 +1,43 @@
 package ru.otus.core.model;
 
-/**
- * @author sergey
- * created on 03.02.19.
- */
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.util.List;
+
+
+
+@Entity
+@Table(name="users")
 public class User {
     @Id
-    private final long id;
-    private final String name;
-    private final int age;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
+    private long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "age")
+    private int age;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private AddressDataSet address;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<PhoneDataSet> phones;
 
     public User() {
-        id = 0;
-        name = null;
-        age = 0;
+
     }
 
     public User(long id, String name, int age) {
