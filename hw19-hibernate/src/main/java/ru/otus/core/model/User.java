@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,8 +34,8 @@ public class User {
     @JoinColumn(name = "address_id")
     private AddressDataSet address;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<PhoneDataSet> phones;
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private List<PhoneDataSet> phones = new ArrayList<>();
 
     public User() {
 
@@ -58,12 +59,26 @@ public class User {
         return age;
     }
 
+    public List<PhoneDataSet> getPhones() {
+        return phones;
+    }
+
+    public AddressDataSet getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressDataSet address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
+                ", address=" + address +
+                ", phones=" + phones +
                 '}';
     }
 }

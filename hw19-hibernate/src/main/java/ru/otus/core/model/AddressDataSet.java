@@ -2,6 +2,8 @@ package ru.otus.core.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,9 +11,13 @@ import javax.persistence.Table;
 @Table(name = "addresses")
 public class AddressDataSet {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @Column(name = "street")
     private String street;
+
+    public AddressDataSet() {
+    }
 
     public AddressDataSet(long id, String street) {
         this.id = id;
@@ -24,5 +30,13 @@ public class AddressDataSet {
 
     public String getStreet() {
         return street;
+    }
+
+    @Override
+    public String toString() {
+        return "AddressDataSet{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                '}';
     }
 }

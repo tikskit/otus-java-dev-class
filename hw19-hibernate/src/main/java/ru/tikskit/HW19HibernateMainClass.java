@@ -28,14 +28,19 @@ public class HW19HibernateMainClass {
         DBServiceUser dbServiceUser = new DbServiceUserImpl(userDao);
 
 
-        long id = dbServiceUser.saveUser(new User(0, "Вася", 4));
-        Optional<User> mayBeCreatedUser = dbServiceUser.getUser(id);
+        User vasya = new User(0, "вася", 28);
+        vasya.setAddress(new AddressDataSet(0, "Lenina"));
+        vasya.getPhones().add(new PhoneDataSet(0, "123456"));
+        vasya.getPhones().add(new PhoneDataSet(0, "ASDFG"));
 
-        id = dbServiceUser.saveUser(new User(0, "А! Нет. Это же совсем не Вася", 48));
-        Optional<User> mayBeUpdatedUser = dbServiceUser.getUser(id);
 
-        outputUserOptional("Created user", mayBeCreatedUser);
-        outputUserOptional("Updated user", mayBeUpdatedUser);
+        long id = dbServiceUser.saveUser(vasya);
+        logger.info("new user id: {}", id);
+
+        Optional<User> dbUser = dbServiceUser.getUser(id);
+        logger.info("user: {}", dbUser);
+
+        //dbUser.get().
 
     }
 
