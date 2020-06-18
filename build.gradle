@@ -40,7 +40,9 @@ allprojects {
             dependency("com.h2database:h2:${Versions.h2}")
             dependency("ch.qos.logback:logback-classic:${Versions.logback}")
             dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
-            dependency("com.google.code.gson:gson:${Versions.gson}")        }
+            dependency("com.google.code.gson:gson:${Versions.gson}")
+            dependency("org.hibernate:hibernate-core:${Versions.hibernate}")
+        }
     }
 
 }

@@ -30,6 +30,7 @@ build
 
 # Ignore Idea-specific directory
 .idea
+out
 
 #Idea
 *.iml
