@@ -39,7 +39,8 @@ allprojects {
             dependency("org.assertj:assertj-core:${Versions.assertj_core}")
             dependency("com.h2database:h2:${Versions.h2}")
             dependency("ch.qos.logback:logback-classic:${Versions.logback}")
-        }
+            dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
+            dependency("com.google.code.gson:gson:${Versions.gson}")        }
     }
 
 }
