@@ -2,6 +2,9 @@ package ru.otus.core.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.cachehw.HwCache;
+import ru.otus.cachehw.HwListener;
+import ru.otus.cachehw.MyCache;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.User;
 
@@ -9,11 +12,20 @@ import java.util.Optional;
 
 public class DbServiceUserImpl implements DBServiceUser {
     private static final Logger logger = LoggerFactory.getLogger(DbServiceUserImpl.class);
+    private static final HwCache<String, User> cache = new MyCache<>();
+
+    private final HwListener<String, User> cacheListener = new HwListener<String, User>() {
+        @Override
+        public void notify(String key, User value, String action) {
+            logger.info("got user from the cache: {}", value);
+        }
+    };
 
     private final UserDao userDao;
 
     public DbServiceUserImpl(UserDao userDao) {
         this.userDao = userDao;
+        cache.addListener(cacheListener);
     }
 
     @Override
@@ -36,12 +48,30 @@ public class DbServiceUserImpl implements DBServiceUser {
 
     @Override
     public Optional<User> getUser(long id) {
+        User cachedUser = getUserFromCache(id);
+        if (cachedUser != null) {
+            return Optional.of(cachedUser);
+        } else {
+            Optional<User> user = getUserFromDB(id);
+            if (user.isPresent()) {
+                cache.put("id" + id, user.get());
+            }
+
+            return user;
+        }
+    }
+
+    private User getUserFromCache(long id) {
+        return cache.get("id" + id);
+    }
+
+    private Optional<User> getUserFromDB(long id) {
         try (var sessionManager = userDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
                 Optional<User> userOptional = userDao.findById(id);
 
-                logger.info("user: {}", userOptional.orElse(null));
+                logger.info("user from db: {}", userOptional.orElse(null));
                 return userOptional;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
