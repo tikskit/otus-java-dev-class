@@ -33,9 +33,11 @@ public class HW21CacheMainClass {
         List<Long> userIds = populateUsers(2048, dbServiceUser);
 
         try {
+            // Эта пауза нужна, чтобы успеть запустить jconsole
             Thread.sleep(TimeUnit.SECONDS.toMillis(5));
             logger.info("we're about to start getting users");
             List<User> userList1 = getUsers(userIds, dbServiceUser);
+            // На следующей строке удобно ставить брейкпойнит, чтобы посмотреть в логах как работал кеш
             logger.info("first round is done");
             List<User> userList2 = getUsers(userIds, dbServiceUser);
             logger.info("second round is done");

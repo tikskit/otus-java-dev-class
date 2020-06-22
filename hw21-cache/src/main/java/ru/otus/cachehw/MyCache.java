@@ -31,7 +31,7 @@ public class MyCache<K, V> implements HwCache<K, V> {
     public void remove(K key) {
         V value = cache.remove(key);
         if (value != null) {
-            notifyAction(key, value, "removed");
+            notifyAction(key, value, "remove");
         }
     }
 

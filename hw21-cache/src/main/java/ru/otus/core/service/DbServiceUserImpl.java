@@ -14,6 +14,10 @@ public class DbServiceUserImpl implements DBServiceUser {
     private static final Logger logger = LoggerFactory.getLogger(DbServiceUserImpl.class);
     private static final HwCache<String, User> cache = new MyCache<>();
 
+    /*
+        Слушатель тут добавлен как поле класса, потому что если его добавить как анонимный класс, то он будет удален GC
+        при первой же сборке
+    */
     private final HwListener<String, User> cacheListener = new HwListener<String, User>() {
         @Override
         public void notify(String key, User value, String action) {
