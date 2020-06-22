@@ -17,7 +17,13 @@ public class DbServiceUserImpl implements DBServiceUser {
     private final HwListener<String, User> cacheListener = new HwListener<String, User>() {
         @Override
         public void notify(String key, User value, String action) {
-            logger.info("got user from the cache: {}", value);
+            if (action.compareToIgnoreCase("put") == 0) {
+                logger.info("put user to the cache: {}", value);
+            } else if (action.compareToIgnoreCase("get") == 0) {
+                logger.info("got user from the cache: {}", value);
+            } else if (action.compareToIgnoreCase("remove") == 0) {
+                logger.info("removed user from the cache: {}", value);
+            }
         }
     };
 

@@ -23,7 +23,7 @@ public class MyCache<K, V> implements HwCache<K, V> {
     @Override
     public void put(K key, V value) {
         cache.put(key, value);
-        notifyAction(key, value, "put into the cache");
+        notifyAction(key, value, "put");
     }
 
 
@@ -31,7 +31,7 @@ public class MyCache<K, V> implements HwCache<K, V> {
     public void remove(K key) {
         V value = cache.remove(key);
         if (value != null) {
-            notifyAction(key, value, "removed from the cache");
+            notifyAction(key, value, "removed");
         }
     }
 
@@ -39,7 +39,7 @@ public class MyCache<K, V> implements HwCache<K, V> {
     public V get(K key) {
         V value = cache.get(key);
         if (value != null) {
-            notifyAction(key, value, "got from the cache");
+            notifyAction(key, value, "get");
         }
         return cache.get(key);
     }

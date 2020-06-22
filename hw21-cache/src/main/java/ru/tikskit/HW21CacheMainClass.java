@@ -13,7 +13,10 @@ import ru.otus.hibernate.HibernateUtils;
 import ru.otus.hibernate.dao.UserDaoHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class HW21CacheMainClass {
 
@@ -27,20 +30,51 @@ public class HW21CacheMainClass {
         UserDao userDao = new UserDaoHibernate(sessionManager);
         DBServiceUser dbServiceUser = new DbServiceUserImpl(userDao);
 
+        List<Long> userIds = populateUsers(2048, dbServiceUser);
 
-        User vasya = new User(0, "вася", 28);
-        vasya.setAddress(new AddressDataSet(0, "Lenina"));
-        vasya.getPhones().add(new PhoneDataSet(0, "123456"));
-        vasya.getPhones().add(new PhoneDataSet(0, "ASDFG"));
+        try {
+            Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+            logger.info("we're about to start getting users");
+            List<User> userList1 = getUsers(userIds, dbServiceUser);
+            logger.info("first round is done");
+            List<User> userList2 = getUsers(userIds, dbServiceUser);
+            logger.info("second round is done");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
-        long id = dbServiceUser.saveUser(vasya);
-        logger.info("new user id: {}", id);
+    }
 
-        Optional<User> dbUser = dbServiceUser.getUser(id);
-        //logger.info("user: {}", dbUser);
-        Optional<User> dbUser1 = dbServiceUser.getUser(id);
-        //logger.info("user: {}", dbUser1);
+    private static List<Long> populateUsers(int count, DBServiceUser dbServiceUser) {
 
+        List<Long> ids = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            User vasya = new User(0, "вася№" + i, 28);
+            vasya.setAddress(new AddressDataSet(0, "Lenina"));
+            vasya.getPhones().add(new PhoneDataSet(0, "123456"));
+            vasya.getPhones().add(new PhoneDataSet(0, "ASDFG"));
+
+
+            long id = dbServiceUser.saveUser(vasya);
+            ids.add(id);
+        }
+
+        return ids;
+    }
+
+    private static List<User> getUsers(List<Long> ids, DBServiceUser dbServiceUser) throws InterruptedException {
+        List<User> res = new ArrayList<>();
+        for (int i = 0; i < ids.size(); i++) {
+            Optional<User> dbUser = dbServiceUser.getUser(ids.get(i));
+            if (dbUser.isPresent()) {
+                res.add(dbUser.get());
+            }
+            if (i % 10 == 0) {
+                Thread.sleep(100);
+            }
+        }
+
+        return res;
     }
 }
