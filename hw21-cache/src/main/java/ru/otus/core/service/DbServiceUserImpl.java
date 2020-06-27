@@ -47,6 +47,8 @@ public class DbServiceUserImpl implements DBServiceUser {
                 sessionManager.commitSession();
 
                 logger.info("created user: {}", userId);
+                cache.remove("id" + userId);
+                cache.put("id" + userId, user);
                 return userId;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

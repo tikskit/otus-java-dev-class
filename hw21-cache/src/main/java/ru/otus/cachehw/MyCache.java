@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -51,24 +50,30 @@ public class MyCache<K, V> implements HwCache<K, V> {
 
     @Override
     public void removeListener(HwListener<K, V> listener) {
-        for (WeakReference<HwListener<K, V>> l : listeners) {
-            if (l.get() != null && l.get() == listener) {
-                listeners.remove(l);
+        var iterator = listeners.iterator();
+        while (iterator.hasNext()) {
+            var ref = iterator.next();
+
+            if (ref.get() == null) {
+                iterator.remove();
+            } else if (ref.get() == listener) { // Если тут ref.get() будет равно null - не страшно
+                iterator.remove();
                 return;
             }
         }
     }
 
     private void notifyAction(K key, V value, String action) {
-
-        Iterator<WeakReference<HwListener<K, V>>> iterator = listeners.iterator();
+        var iterator = listeners.iterator();
 
         while (iterator.hasNext()) {
-            WeakReference<HwListener<K, V>> ref = iterator.next();
-            if (ref.get() == null) {
+            var ref = iterator.next();
+            var listener = ref.get();
+
+            if (listener == null) {
                 iterator.remove();
             } else {
-                ref.get().notify(key, value, action);
+                listener.notify(key, value, action);
             }
         }
     }
