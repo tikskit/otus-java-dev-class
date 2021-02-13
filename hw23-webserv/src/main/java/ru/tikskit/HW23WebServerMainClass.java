@@ -1,7 +1,5 @@
 package ru.tikskit;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,16 +21,13 @@ public class HW23WebServerMainClass {
     private static final int WEB_SERVER_PORT = 8080;
     private static final String TEMPLATES_DIR = "/templates/";
 
-    private static Logger logger = LoggerFactory.getLogger(HW23WebServerMainClass.class);
-
     public static void main(String[] args) throws Exception {
 
-        Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         DBServiceUser dbServiceUser = createDBServiceUser();
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
         UserAuthService authService = new UserAuthServiceImpl(dbServiceUser);
 
-        UsersWebServer webServer = new UsersWebServerImpl(WEB_SERVER_PORT, authService, dbServiceUser, gson,
+        UsersWebServer webServer = new UsersWebServerImpl(WEB_SERVER_PORT, authService, dbServiceUser,
                 templateProcessor);
 
         populateUsers(dbServiceUser);
@@ -51,12 +46,9 @@ public class HW23WebServerMainClass {
     }
 
     private static void populateUsers(DBServiceUser dbServiceUser) {
-        User user = new User(0, "admin", "123");
-        dbServiceUser.saveUser(user);
-/*
-        dbServiceUser.saveUser(new User(2, "programmer", "qwe123"));
-        dbServiceUser.saveUser(new User(3, "driver", "GfjklsfF234!!!f_s"));
-*/
+        dbServiceUser.saveUser(new User(0, "admin", "123"));
+        dbServiceUser.saveUser(new User(0, "programmer", "qwe123"));
+        dbServiceUser.saveUser(new User(0, "driver", "GfjklsfF234!!!f_s"));
     }
 
 }

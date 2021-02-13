@@ -1,6 +1,5 @@
 package ru.tikskit.server;
 
-import com.google.gson.Gson;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -25,7 +24,6 @@ public class UsersWebServerImpl implements UsersWebServer {
     private static final String COMMON_RESOURCES_DIR = "static";
 
 
-    private final Gson gson;
     private final DBServiceUser dbServiceUser;
     private final TemplateProcessor templateProcessor;
     private final Server server;
@@ -35,11 +33,9 @@ public class UsersWebServerImpl implements UsersWebServer {
     public UsersWebServerImpl(int port,
                               UserAuthService authService,
                               DBServiceUser dbServiceUser,
-                              Gson gson,
                               TemplateProcessor templateProcessor) {
 
         this.dbServiceUser = dbServiceUser;
-        this.gson = gson;
         this.templateProcessor = templateProcessor;
         this.authService = authService;
         server = new Server(port);
@@ -87,7 +83,7 @@ public class UsersWebServerImpl implements UsersWebServer {
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/users");
-        servletContextHandler.addServlet(new ServletHolder(new NewUserServlet(templateProcessor, dbServiceUser, COMMON_RESOURCES_DIR)), "/newuser");
+        servletContextHandler.addServlet(new ServletHolder(new NewUserServlet(dbServiceUser, COMMON_RESOURCES_DIR)), "/newuser");
         return servletContextHandler;
     }
 

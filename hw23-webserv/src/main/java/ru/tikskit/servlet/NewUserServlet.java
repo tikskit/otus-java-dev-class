@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
-import ru.tikskit.services.TemplateProcessor;
 
 import java.io.IOException;
 
@@ -14,12 +13,10 @@ public class NewUserServlet extends HttpServlet {
     private static final String NEW_USER_PAGE_TEMPLATE = "newuser.html";
 
     private final DBServiceUser dbServiceUser;
-    private final TemplateProcessor templateProcessor;
     private final String commonResourceDir;
 
-    public NewUserServlet(TemplateProcessor templateProcessor, DBServiceUser dbServiceUser, String commonResourceDir) {
+    public NewUserServlet(DBServiceUser dbServiceUser, String commonResourceDir) {
         this.dbServiceUser = dbServiceUser;
-        this.templateProcessor = templateProcessor;
         this.commonResourceDir = commonResourceDir;
     }
 

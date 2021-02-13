@@ -14,7 +14,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic")
     implementation("com.h2database:h2")
     implementation("org.hibernate:hibernate-core")
-    implementation("com.google.code.gson:gson")
 
     implementation("org.eclipse.jetty:jetty-servlet")
     implementation("org.eclipse.jetty:jetty-server")
