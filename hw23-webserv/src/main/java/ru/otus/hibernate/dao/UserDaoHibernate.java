@@ -10,8 +10,11 @@ import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.hibernate.sessionmanager.DatabaseSessionHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class UserDaoHibernate implements UserDao {
@@ -50,6 +53,24 @@ public class UserDaoHibernate implements UserDao {
         }
         return Optional.empty();
     }
+
+    @Override
+    public List<User> getAll() {
+        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
+        try {
+
+            var entityManager = sessionManager.getSessionFactory().createEntityManager();
+            var builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<User> criteria = builder.createQuery(User.class);
+            criteria.from(User.class);
+
+            return currentSession.getHibernateSession().createQuery(criteria).getResultList();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return new ArrayList<>();
+    }
+
 
     @Override
     public long insertUser(User user) {

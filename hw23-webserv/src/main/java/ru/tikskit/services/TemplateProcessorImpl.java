@@ -3,6 +3,7 @@ package ru.tikskit.services;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -18,6 +19,10 @@ public class TemplateProcessorImpl implements TemplateProcessor {
         //configuration.setDirectoryForTemplateLoading(new File(templatesDir));  // for directory
         configuration.setClassForTemplateLoading(this.getClass(), templatesDir); // for resource
         configuration.setDefaultEncoding("UTF-8");
+        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.DEBUG_HANDLER);
+        configuration.setLogTemplateExceptions(false);
+        configuration.setWrapUncheckedExceptions(true);
+        configuration.setFallbackOnNullLoopVariable(false);
     }
 
     @Override

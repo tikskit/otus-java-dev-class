@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" content="text/html;" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список пользователей</title>
+</head>
+<body>
+<form method="get">
+    <table border="1">
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Логин</th>
+            <th>Пароль</th>
+        </tr>
+        <#list users as user>
+            <tr>
+                <td>
+                    <input type="checkbox" id="userid" name="userid" value="${user.id}">
+                </td>
+                <td>${user.id}</td>
+                <td>${user.login}</td>
+                <td>${user.pass}</td>
+            </tr>
+        </#list>
+    </table>
+    <input type="submit" value="Удалить" formaction="/delete">
+    <input type="submit" value="Добавить" formaction="/new">
+</form>
+</body>
+</html>
