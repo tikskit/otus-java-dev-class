@@ -8,4 +8,6 @@ public interface Versions {
     public static final String glassfishJson = "1.1.4";
     public static final String gson = "2.8.6";
     public static final String hibernate = "5.4.17.Final";
+    public static final String jetty = "11.0.0";
+    public static final String freemarker = "2.3.30";
 }

@@ -42,6 +42,17 @@ allprojects {
             dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
             dependency("com.google.code.gson:gson:${Versions.gson}")
             dependency("org.hibernate:hibernate-core:${Versions.hibernate}")
+
+            dependency("org.eclipse.jetty:jetty-servlet:${Versions.jetty}")
+            dependency("org.eclipse.jetty:jetty-server:${Versions.jetty}")
+            dependency("org.eclipse.jetty:jetty-webapp:${Versions.jetty}")
+            dependency("org.eclipse.jetty:jetty-security:${Versions.jetty}")
+            dependency("org.eclipse.jetty:jetty-http:${Versions.jetty}")
+            dependency("org.eclipse.jetty:jetty-io:${Versions.jetty}")
+            dependency("org.eclipse.jetty:jetty-util:${Versions.jetty}")
+
+            dependency("org.freemarker:freemarker:${Versions.freemarker}")
+
         }
     }
 
