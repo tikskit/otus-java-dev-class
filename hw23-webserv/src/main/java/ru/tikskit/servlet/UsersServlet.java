@@ -34,11 +34,6 @@ public class UsersServlet extends HttpServlet {
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(USERS_PAGE_TEMPLATE, root));
 
-/*
-        Map<String, Object> paramsMap = new HashMap<>();
-        userDao.findRandomUser().ifPresent(randomUser -> paramsMap.put(TEMPLATE_ATTR_RANDOM_USER, randomUser));
-
-*/
     }
 
 }

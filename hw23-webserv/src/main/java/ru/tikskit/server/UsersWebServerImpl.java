@@ -15,7 +15,7 @@ import ru.tikskit.services.TemplateProcessor;
 import ru.tikskit.services.UserAuthService;
 import ru.tikskit.servlet.AuthorizationFilter;
 import ru.tikskit.servlet.LoginServlet;
-import ru.tikskit.servlet.UsersApiServlet;
+import ru.tikskit.servlet.NewUserServlet;
 import ru.tikskit.servlet.UsersServlet;
 
 import java.util.Arrays;
@@ -69,7 +69,7 @@ public class UsersWebServerImpl implements UsersWebServer {
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(resourceHandler);
-        handlers.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*"));
+        handlers.addHandler(applySecurity(servletContextHandler, "/users", "/newuser"));
 
 
         server.setHandler(handlers);
@@ -87,7 +87,7 @@ public class UsersWebServerImpl implements UsersWebServer {
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/users");
-        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser, gson)), "/api/user/*");
+        servletContextHandler.addServlet(new ServletHolder(new NewUserServlet(templateProcessor, dbServiceUser, COMMON_RESOURCES_DIR)), "/newuser");
         return servletContextHandler;
     }
 

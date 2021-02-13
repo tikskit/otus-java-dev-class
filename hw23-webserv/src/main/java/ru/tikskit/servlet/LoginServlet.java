@@ -5,16 +5,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import ru.tikskit.services.TemplateProcessor;
 import ru.tikskit.services.UserAuthService;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
@@ -37,7 +30,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
-        response.getWriter().println(getLoginPageContent());
+        response.getWriter().println(ServletUtils.getLoginPageContent(commonResourceDir, LOGIN_PAGE_TEMPLATE));
     }
 
     @Override
@@ -55,22 +48,5 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    private String getLoginPageContent() throws IOException {
-        Path indexPath = Paths.get(commonResourceDir, LOGIN_PAGE_TEMPLATE);
 
-        try (InputStream is = LoginServlet.class.getClassLoader().getResourceAsStream(indexPath.toString())) {
-            return readFileContent(Objects.requireNonNull(is));
-        }
-    }
-
-    private static String readFileContent(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = inputStream.read(buffer)) != -1) {
-            result.write(buffer, 0, length);
-        }
-
-        return result.toString(StandardCharsets.UTF_8);
-    }
 }

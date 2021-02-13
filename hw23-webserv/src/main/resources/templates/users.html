@@ -6,26 +6,22 @@
 </head>
 <body>
 <form method="get">
+    <p>Существующие пользователи:</p>
     <table border="1">
         <tr>
-            <th></th>
             <th>ID</th>
             <th>Логин</th>
             <th>Пароль</th>
         </tr>
         <#list users as user>
             <tr>
-                <td>
-                    <input type="checkbox" id="userid" name="userid" value="${user.id}">
-                </td>
                 <td>${user.id}</td>
                 <td>${user.login}</td>
                 <td>${user.pass}</td>
             </tr>
         </#list>
     </table>
-    <input type="submit" value="Удалить" formaction="/delete">
-    <input type="submit" value="Добавить" formaction="/new">
+    <input type="submit" value="Добавить" formaction="/newuser">
 </form>
 </body>
 </html>
