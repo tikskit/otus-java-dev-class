@@ -6,12 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -23,8 +19,6 @@ import ru.otus.core.service.DbServiceUserImpl;
 import ru.otus.hibernate.HibernateUtils;
 import ru.otus.hibernate.dao.UserDaoHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
-
-import java.util.Locale;
 
 @Configuration
 @ComponentScan
@@ -79,16 +73,15 @@ public class WebConfig implements WebMvcConfigurer {
         return new DbServiceUserImpl(userDao);
     }
 
-/*
     @Bean
     public ResourceBundleMessageSource messageSource() {
 
         var source = new ResourceBundleMessageSource();
-        source.setBasenames("createuser");
+        source.setDefaultEncoding("utf-8");
+        source.setBasenames("createuser", "userslist");
         source.setUseCodeAsDefaultMessage(false);
 
         return source;
     }
-*/
 
 }

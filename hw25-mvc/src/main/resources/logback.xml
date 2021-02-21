@@ -13,7 +13,6 @@
     <logger name="ch.qos.logback" level="ERROR"/>
 
 <!--    <logger name="org.thymeleaf" level="TRACE"/>-->
-    <logger name="org.codehaus.jackson" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
