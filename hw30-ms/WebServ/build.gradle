@@ -1,0 +1,49 @@
+plugins {
+    //id 'java'
+    id 'war'
+}
+
+sourceCompatibility = JavaVersion.VERSION_15
+targetCompatibility = JavaVersion.VERSION_15
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.h2database:h2")
+
+    implementation("org.webjars:webjars-locator-core")
+    implementation("org.webjars:sockjs-client:${Versions.sockjs}")
+    implementation("org.webjars:stomp-websocket:${Versions.stomp}")
+    implementation("org.webjars:bootstrap:${Versions.bootstrap}")
+
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.with {
+        encoding = 'UTF-8'
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.with {
+        encoding = 'UTF-8'
+    }
+}
+
+war {
+    archiveName 'hw30ms.war'
+    from 'src/main/resources'
+}

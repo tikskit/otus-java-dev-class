@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:utext="#{userlist.page.title}">Список пользователей</title>
+</head>
+<body>
+<form>
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th th:utext="#{table.column.login}">Логин</th>
+            <th th:utext="#{table.column.pass}">Пароль</th>
+        </tr>
+        <tr th:each="user: ${users}">
+            <td th:utext="${user.id}">1</td>
+            <td th:utext="${user.login}">admin</td>
+            <td th:utext="${user.pass}">123213</td>
+        </tr>
+    </table>
+
+    <input type="submit" value="Добавить" th:value="#{form.addbutton.label}" formaction="createuser">
+</form>
+</body>
+</html>

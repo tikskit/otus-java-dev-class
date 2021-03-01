@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{page.title}">Создать пользователя</title>
+</head>
+<body>
+<form action="createuser" method="post" th:action="@{/createuser}" accept-charset="utf-8">
+    <fieldset>
+        <label for="login" th:text="#{loginlabel.caption}">Логин</label>
+        <input type="text" id="login" name="login"/>
+        <label for="pass" th:text="#{passlabel.caption}">Пароль</label>
+        <input type="password" id="pass" name="pass"/>
+        <input type="submit" value="Создать" th:attr="value=#{createbutton.caption}"/>
+    </fieldset>
+</form>
+</body>
+</html>
