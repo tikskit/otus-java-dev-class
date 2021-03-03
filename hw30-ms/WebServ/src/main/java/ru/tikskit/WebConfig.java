@@ -34,7 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(this.applicationContext);
-        templateResolver.setPrefix("classpath:/templates/");
+        templateResolver.setPrefix("classpath:/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCacheable(false); // для отладки
@@ -77,7 +77,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         var source = new ResourceBundleMessageSource();
         source.setDefaultEncoding("utf-8");
-        source.setBasenames("createuser", "userslist");
+        source.setBasenames("userslist");
         source.setUseCodeAsDefaultMessage(false);
 
         return source;

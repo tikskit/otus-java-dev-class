@@ -1,4 +1,4 @@
-package ru.tikskit.domain;
+package ru.tikskit.users;
 
 public class Message {
     private String messageStr;

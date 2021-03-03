@@ -46,9 +46,9 @@ public class MsClientImpl implements MsClient {
     public void handle(Message msg) {
         logger.info("new message:{}", msg);
         try {
-            RequestHandler requestHandler = handlersStore.getHandlerByType(msg.getType());
+            RequestHandler requestHandler = handlersStore.getHandlerByType(msg.getType()); // Получаем хэндлер для данного типа сообщения
             if (requestHandler != null) {
-                requestHandler.handle(msg).ifPresent(message -> sendMessage((Message) message));
+                requestHandler.handle(msg).ifPresent(message -> sendMessage((Message) message)); // Если обработка сообщения возвращает ответ - отправляем его
             } else {
                 logger.error("handler not found for the message type:{}", msg.getType());
             }

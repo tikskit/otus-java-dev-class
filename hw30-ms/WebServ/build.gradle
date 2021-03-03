@@ -1,12 +1,14 @@
 plugins {
-    //id 'java'
-    id 'war'
+    id 'java'
+    id 'org.springframework.boot' version '2.4.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_15
 targetCompatibility = JavaVersion.VERSION_15
 
 dependencies {
+    implementation project(':hw30-ms:MessageSystem')
+
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -26,24 +28,4 @@ tasks.withType(JavaCompile) {
     options.with {
         encoding = 'UTF-8'
     }
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-}
-
-compileJava.options.encoding = 'UTF-8'
-
-tasks.withType(JavaCompile) {
-    options.with {
-        encoding = 'UTF-8'
-    }
-}
-
-war {
-    archiveName 'hw30ms.war'
-    from 'src/main/resources'
 }

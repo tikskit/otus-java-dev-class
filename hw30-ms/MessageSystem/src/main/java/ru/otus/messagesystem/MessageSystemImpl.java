@@ -24,19 +24,23 @@ public final class MessageSystemImpl implements MessageSystem {
     private static final int MESSAGE_QUEUE_SIZE = 100_000;
     private static final int MSG_HANDLER_THREAD_LIMIT = 2;
 
-    private final AtomicBoolean runFlag = new AtomicBoolean(true);
+    private final AtomicBoolean runFlag = new AtomicBoolean(true); // запущено ли приложение
 
+    // Map с клиентами. Имя клиента (адресат) является ключем, значением является сам клиент
     private final Map<String, MsClient> clientMap = new ConcurrentHashMap<>();
+    // Очередь, в которую попадают сообщения и разбираются из нее
     private final BlockingQueue<Message> messageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_SIZE);
 
     private Runnable disposeCallback;
 
+    //Поток, который разбирает очередь сообщений messageQueue.
     private final ExecutorService msgProcessor = Executors.newSingleThreadExecutor(runnable -> {
         Thread thread = new Thread(runnable);
         thread.setName("msg-processor-thread");
         return thread;
     });
 
+    // Потоки, которые будут разбирать сообщения, которые msgProcessor вытащил из очереди сообщений
     private final ExecutorService msgHandler = Executors.newFixedThreadPool(MSG_HANDLER_THREAD_LIMIT,
             new ThreadFactory() {
 
@@ -122,11 +126,11 @@ public final class MessageSystemImpl implements MessageSystem {
                 if (msg == MessageBuilder.getVoidMessage()) {
                     logger.info("received the stop message");
                 } else {
-                    MsClient clientTo = clientMap.get(msg.getTo());
+                    MsClient clientTo = clientMap.get(msg.getTo()); // Получаем клиента по адресату сообщения
                     if (clientTo == null) {
                         logger.warn("client not found");
                     } else {
-                        msgHandler.submit(() -> handleMessage(clientTo, msg));
+                        msgHandler.submit(() -> handleMessage(clientTo, msg)); // Обработать сообщение msg с помощью клиента clientTo в одном из двух потоков (msgHandler двухпоточный, см. MSG_HANDLER_THREAD_LIMIT)
                     }
                 }
             } catch (InterruptedException ex) {
@@ -137,6 +141,8 @@ public final class MessageSystemImpl implements MessageSystem {
             }
         }
 
+
+        // Вызываем специальный call back, если нужно сделать что-то перед остановкой
         if (disposeCallback != null) {
             msgHandler.submit(disposeCallback);
         }

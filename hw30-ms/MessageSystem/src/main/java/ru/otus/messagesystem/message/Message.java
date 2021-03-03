@@ -13,10 +13,10 @@ public class Message implements Serializable {
     private final MessageId id;
     private final String from;
     private final String to;
-    private final MessageId sourceMessageId;
+    private final MessageId sourceMessageId; // Для ответных сообщений в этом поле задается исходное
     private final String type;
     private final byte[] payload;
-    private final CallbackId callbackId;
+    private final CallbackId callbackId; // Идентификатор действия, которое нужно выполнить, когда сообщение придет
 
     Message(MessageId messageId, String from, String to, MessageId sourceMessageId, String type,
             byte[] payload, CallbackId callbackId) {
