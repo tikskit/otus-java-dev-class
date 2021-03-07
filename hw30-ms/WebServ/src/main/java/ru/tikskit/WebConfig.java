@@ -59,20 +59,6 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public DBServiceUser dbServiceUser() {
-        return createDBServiceUser();
-    }
-
-    private static DBServiceUser createDBServiceUser() {
-        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory("hibernate.cfg.xml",
-                User.class);
-
-        SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
-        UserDao userDao = new UserDaoHibernate(sessionManager);
-        return new DbServiceUserImpl(userDao);
-    }
-
-    @Bean
     public ResourceBundleMessageSource messageSource() {
 
         var source = new ResourceBundleMessageSource();
