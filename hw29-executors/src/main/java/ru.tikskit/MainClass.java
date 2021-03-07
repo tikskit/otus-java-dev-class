@@ -3,6 +3,7 @@ package ru.tikskit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class MainClass {
@@ -34,11 +35,11 @@ public class MainClass {
     private static class Processor {
         private final Counter counter = new Counter();
 
-        public synchronized void doJob() {
-
+        public synchronized void doJob(CountDownLatch latch) {
+            latch.countDown(); // Первый поток гарантировано зашел в синхронизированную секцию до второго
             while (!Thread.currentThread().isInterrupted()) {
                 counter.update();
-                logger.info("Thread {} set value to {}", Thread.currentThread().getId(), counter.value);
+                logger.info("Thread {} set value to {}", Thread.currentThread().getName(), counter.value);
                 sleep();
                 notifyAll();
                 do {
@@ -62,10 +63,30 @@ public class MainClass {
         }
     }
 
+
+
     public static void main(String... args) {
         Processor processor = new Processor();
+        CountDownLatch latch = new CountDownLatch(1);
 
-        new Thread(processor::doJob).start();
-        new Thread(processor::doJob).start();
+        Thread t1 = new Thread(() -> {
+            logger.info("{} starts", Thread.currentThread().getName());
+            processor.doJob(latch);
+        }, "Thread 1");
+
+        Thread t2 = new Thread(() -> {
+            logger.info("{} starts", Thread.currentThread().getName());
+            try {
+                latch.await(); // ждет, когда кто-нибудь другой снимет блокировку
+            } catch (InterruptedException e) {
+                return;
+            }
+            processor.doJob(latch);
+        }, "Thread 2");
+
+        t1.start();
+        t2.start();
     }
+
+
 }
