@@ -79,6 +79,7 @@ public class MainClass {
             try {
                 latch.await(); // ждет, когда кто-нибудь другой снимет блокировку
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 return;
             }
             processor.doJob(latch);
