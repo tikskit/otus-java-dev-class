@@ -22,7 +22,7 @@ public class GRPCClient {
     private static final int MIN_VALUE = 0;
     private static final int MAX_VALUE = 30;
 
-    private static final int CHECK_VALUE_RATE = 2;
+    private static final int CHECK_VALUE_RATE = 1;
 
 
 
@@ -41,7 +41,7 @@ public class GRPCClient {
             @Override
             public void onNext(ValueMessage value) {
 
-                System.out.println(String.format("%s Server sent a value: %d", Calendar.getInstance().getTime().toString(),
+                System.out.println(String.format("%s New value: %d", Calendar.getInstance().getTime().toString(),
                         value.getValue()));
                 lastValue.set(value.getValue());
             }
@@ -69,6 +69,11 @@ public class GRPCClient {
                     return;
                 }
                 lastValueL = lastValue.get();
+                if (lastValueL == NO_VALUE_FROM_SERVER) {
+                    currentValue = currentValue + 1;
+                    System.out.println(String.format("%s currentValue:%d", Calendar.getInstance().getTime().toString(),
+                            currentValue));
+                }
                 if (lastValueL != NO_VALUE_FROM_SERVER) {
                     currentValue = currentValue + lastValueL + 1;
                     System.out.println(String.format("%s currentValue:%d", Calendar.getInstance().getTime().toString(),

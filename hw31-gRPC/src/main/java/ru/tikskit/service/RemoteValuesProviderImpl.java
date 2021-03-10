@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RemoteValuesProviderImpl extends RemoteValuesProviderGrpc.RemoteValuesProviderImplBase {
 
-    private static final int SEND_VALUE_RATE = 1;
+    private static final int SEND_VALUE_RATE = 2;
 
     @Override
     public void sendMeValues(RangeMessage request, StreamObserver<ValueMessage> responseObserver) {
