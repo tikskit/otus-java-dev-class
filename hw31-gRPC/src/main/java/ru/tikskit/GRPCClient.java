@@ -70,7 +70,7 @@ public class GRPCClient {
                 }
                 lastValueL = lastValue.get();
                 if (lastValueL == NO_VALUE_FROM_SERVER) {
-                    currentValue = currentValue + 1;
+                    currentValue++;
                     System.out.println(String.format("%s currentValue:%d", Calendar.getInstance().getTime().toString(),
                             currentValue));
                 } else {
