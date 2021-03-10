@@ -73,8 +73,7 @@ public class GRPCClient {
                     currentValue = currentValue + 1;
                     System.out.println(String.format("%s currentValue:%d", Calendar.getInstance().getTime().toString(),
                             currentValue));
-                }
-                if (lastValueL != NO_VALUE_FROM_SERVER) {
+                } else {
                     currentValue = currentValue + lastValueL + 1;
                     System.out.println(String.format("%s currentValue:%d", Calendar.getInstance().getTime().toString(),
                             currentValue));
