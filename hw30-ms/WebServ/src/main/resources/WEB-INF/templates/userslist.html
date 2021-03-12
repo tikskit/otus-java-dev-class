@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <title th:utext="#{userlist.page.title}">Список пользователей</title>
 
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
-    <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
     <script type="text/JavaScript">
-        function addUserToTable() {
+        function initStomp() {
             const stompClient = Stomp.over(new SockJS('/users-list-websocket'));
 
             stompClient.connect({}, (frame) => {
@@ -55,7 +52,7 @@
         }
     </script>
 </head>
-<body onload="addUserToTable();">
+<body onload="initStomp();">
 <form>
 
     <table border="1" id="usersTable">

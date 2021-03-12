@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
-import ru.otus.core.service.DbServiceException;
 import ru.tikskit.ms.FrontendService;
+import ru.tikskit.ms.UserData;
+import ru.tikskit.utils.UserUtils;
 
 import java.util.List;
 
@@ -39,34 +40,28 @@ public class UserController {
     }
 
     @GetMapping("/createuser")
-    public void createUser(@ModelAttribute User user) {
-        frontendService.getUserData(1, data -> {
-            logger.info("saving user to db: {}", data.getUserId());
-            // Получаем пользователя из БД
-/*
-                    try {
-                        User userObj = jsonToUser(data.getData());
-                        try {
-                            dbServiceUser.saveUser(userObj);
-                            sendNewUser(userObj);
-                        } catch (DbServiceException e) {
-                            logger.error("Error on creation user", e);
-                        }
-                    } catch (JsonProcessingException e) {
-                        logger.error("Error on convertion json to User", e);
-                    }
-*/
-                }
+    public void createUser(@ModelAttribute User user) throws JsonProcessingException {
+
+        UserData userData = new UserData(0, UserUtils.userToJson(user));
+
+        frontendService.saveUser(userData, data -> {
+
+            try {
+                User userObj = UserUtils.jsonToUser(data.getData());
+                logger.info("User to response: {}", user);
+                returnUserWS(userObj);
+            } catch (JsonProcessingException e) {
+                logger.error("Error on convertion json to User", e);
+            }
+
+        }
         );
+
     }
 
-    private User jsonToUser(String json) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, User.class);
-    }
-
-    public void sendNewUser(User user) {
+    public void returnUserWS(User user) {
         template.convertAndSend("/topic/newUser", user);
+        logger.info("User was sent to client: {}", user);
     }
 
 }

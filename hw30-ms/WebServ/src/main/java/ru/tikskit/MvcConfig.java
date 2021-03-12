@@ -1,32 +1,24 @@
 package ru.tikskit;
 
-import org.hibernate.SessionFactory;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
-import ru.otus.core.dao.UserDao;
-import ru.otus.core.model.User;
-import ru.otus.core.service.DBServiceUser;
-import ru.otus.core.service.DbServiceUserImpl;
-import ru.otus.hibernate.HibernateUtils;
-import ru.otus.hibernate.dao.UserDaoHibernate;
-import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
 @Configuration
 @EnableWebMvc
-public class WebConfig implements WebMvcConfigurer {
+public class MvcConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
 
-    public WebConfig(ApplicationContext applicationContext) {
+    public MvcConfig(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
@@ -69,4 +61,11 @@ public class WebConfig implements WebMvcConfigurer {
         return source;
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("/webjars/")
+                .resourceChain(false);
+        registry.setOrder(1);
+    }
 }

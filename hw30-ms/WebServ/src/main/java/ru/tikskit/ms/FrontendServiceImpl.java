@@ -17,17 +17,19 @@ public class FrontendServiceImpl implements FrontendService {
         this.databaseServiceClientName = databaseServiceClientName;
     }
 
+
     @Override
-    public void getUserData(long userId, MessageCallback<UserData> dataConsumer) {
+    public void saveUser(UserData userData, MessageCallback<UserData> dataConsumer) {
         /*
          С помощью клиента создаем сообщение, которое должно быть отправлено сервису БД.
-             new UserData(userId) - само сообщение
+             userData - само сообщение
              MessageType.USER_DATA - тип сообщения
              dataConsumer - коллбэк, который клиент зарегистрирует на ответ
          */
-        Message outMsg = msClient.produceMessage(databaseServiceClientName, new UserData(userId),
+        Message outMsg = msClient.produceMessage(databaseServiceClientName, userData,
                 MessageType.USER_DATA, dataConsumer);
         // Кладем полученное сообщение в систему
         msClient.sendMessage(outMsg);
+
     }
 }
