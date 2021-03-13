@@ -1,7 +1,6 @@
 package ru.tikskit.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -9,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.view.RedirectView;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
 import ru.tikskit.ms.FrontendService;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/createuser")
-    public void createUser(@ModelAttribute User user) throws JsonProcessingException {
+    public RedirectView createUser(@ModelAttribute User user) throws JsonProcessingException {
 
         UserData userData = new UserData(0, UserUtils.userToJson(user));
 
@@ -56,7 +57,7 @@ public class UserController {
 
         }
         );
-
+        return new RedirectView("/");
     }
 
     public void returnUserWS(User user) {
