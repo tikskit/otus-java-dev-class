@@ -22,4 +22,8 @@ include 'hw23-webserv'
 include 'hw24-di'
 include 'hw25-mvc'
 include 'hw29-executors'
+include 'hw29-executors'
+include 'hw30-ms:MessageSystem'
+include 'hw30-ms:WebServ'
 include 'hw31-gRPC'
+

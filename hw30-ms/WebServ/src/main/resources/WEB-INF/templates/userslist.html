@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:utext="#{userlist.page.title}">Список пользователей</title>
+
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <script type="text/JavaScript">
+        function initStomp() {
+            const stompClient = Stomp.over(new SockJS('/users-list-websocket'));
+
+            stompClient.connect({}, (frame) => {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/newUser', (frame) => {
+                    console.log(frame);
+
+                    var userJSON = JSON.parse(frame.body);
+
+                    var tableRef = document.getElementById("usersTable");
+                    var newRow = tableRef.insertRow(-1);
+
+                    var idCell = newRow.insertCell(0);
+                    var idCelltext = document.createTextNode(userJSON.id);
+                    idCell.appendChild(idCelltext);
+
+                    var loginCell = newRow.insertCell(1);
+                    var loginCellText = document.createTextNode(userJSON.login);
+                    loginCell.appendChild(loginCellText);
+
+                    var passCell = newRow.insertCell(2);
+                    var passCellText = document.createTextNode(userJSON.pass);
+                    passCell.appendChild(passCellText);
+                }
+                );
+            });
+        }
+        function addUser(login, pass) {
+            fetch("http://localhost:8080/createuser?login=" + login + "&pass=" + pass,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+
+                )
+                .then((data) => {
+                    console.log(data); // JSON data parsed by `response.json()` call
+                });
+        }
+    </script>
+</head>
+<body onload="initStomp();">
+<form>
+
+    <table border="1" id="usersTable">
+        <tr>
+            <th>ID</th>
+            <th th:utext="#{table.column.login}">Логин</th>
+            <th th:utext="#{table.column.pass}">Пароль</th>
+        </tr>
+        <tr th:each="user: ${users}">
+            <td th:utext="${user.id}">1</td>
+            <td th:utext="${user.login}">admin</td>
+            <td th:utext="${user.pass}">123213</td>
+        </tr>
+    </table>
+
+    <fieldset>
+        <label for="login" th:text="#{loginlabel.caption}">Логин</label>
+        <input type="text" id="login" name="login"/>
+        <label for="pass" th:text="#{passlabel.caption}">Пароль</label>
+        <input type="password" id="pass" name="pass"/>
+        <input type="button" value="Создать" th:attr="value=#{createbutton.caption}"
+               onclick="addUser(document.getElementById('login').value, document.getElementById('pass').value);"/>
+    </fieldset>
+</form>
+</body>
+</html>
