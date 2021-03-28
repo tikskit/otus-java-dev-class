@@ -29,4 +29,5 @@ public interface Versions {
     String stomp = "2.3.3-1";
     String bootstrap = "4.4.1-1";
     String netty = "4.1.53.Final";
+    String h2 = "1.4.200";
 }

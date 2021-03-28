@@ -21,7 +21,10 @@ include 'hw21-cache'
 include 'hw23-webserv'
 include 'hw24-di'
 include 'hw25-mvc'
+<<<<<<< HEAD
 include 'hw29-executors'
+include 'hw31-gRPC'
+=======
 include 'hw30-ms:MessageSystem'
 include 'hw30-ms:WebServ'
-include 'hw31-gRPC'
+>>>>>>> hw30-MS
